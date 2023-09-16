@@ -1,0 +1,5 @@
+.no-wrap-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto; 
+  }
+  
