@@ -38,17 +38,17 @@ const CartScreen = () => {
       <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
       <Row>
         <Col xs={12}  md={8} style={{paddingBottom: '30px'}}>
-          {cartItems.length === 0 ? (
+          {cartItems?.length === 0 ? (
             <Message>
               Your cart is empty <Link to="/">Go Back</Link>
             </Message>
           ) : (
             <ListGroup variant="flush">
-              {cartItems.map((item) => (
+              {cartItems?.map((item) => (
                 <ListGroup.Item key={item._id}>
                   <Row>
                     <Col xs={3}>
-                      <Image src={item.image} alt={item.name} fluid rounded />
+                      <Image src={item.images[0]} alt={item.name} fluid rounded />
                     </Col>
                     <Col xs={9}>
                       <Row className="d-flex">

@@ -44,12 +44,95 @@ export const register = createAsyncThunk(
   }
 );
 
+// Async thunk action to update profile
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+  async ({ name, email, password }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.put("/api/users/profile", {
+        name,
+        email,
+        password,
+      });
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+)
+
+// Async thunk action to fetch all users
+export const fetchAllUsers = createAsyncThunk(
+  "auth/fetchAllUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get("/api/users");
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+)
+
+// Async thunk action to delete a user
+export const deleteUser = createAsyncThunk(
+  "auth/deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.delete(`/api/users/${id}`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+)
+
+// Async thunk action to fetch user by ID
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`/api/users/${id}`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+// Async thunk action to update user by ID
+export const updateUser = createAsyncThunk(
+  "auth/updateUser",
+  async ({ id, name, email, isAdmin }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(`/api/users/${id}`, {
+        name,
+        email,
+        isAdmin,
+      });
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+
 const initialState = {
   userInfo: localStorage.getItem("userInfo")
     ? JSON.parse(localStorage.getItem("userInfo"))
     : null,
   status: "idle",
+  users: [],
+  usersStatus: 'idle',
+  deleteUserStatus: 'idle',
+  deleteError: null,
   error: null,
+  user: null,
+  userStatus: 'idle',
+  userError: null,
+  updatedUserStatus: 'idle',
+  updatedError: null,
 };
 
 const authSlice = createSlice({
@@ -75,7 +158,7 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.status = "idle";
         state.userInfo = null;
-        localStorage.removeItem("userInfo");
+        localStorage.clear()
       })
       // register
       .addCase(register.pending, (state) => {
@@ -89,7 +172,72 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload.message;
-      });
+      })
+      // updateProfile
+      .addCase(updateProfile.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.userInfo = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload.message;
+      })
+      // fetchAllUsers
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.usersStatus = "loading";
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.usersStatus = "succeeded";
+        state.users = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.usersStatus = "failed";
+        state.error = action.payload.message;
+      })
+      // delete user
+      .addCase(deleteUser.pending, (state) => {
+        state.deleteUserStatus = "loading";
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.deleteUserStatus = "succeeded";
+        // Remove the deleted user from the users array
+        state.users = state.users.filter(user => user._id !== action.meta.arg);
+        state.deleteError = null; // Clear any delete error
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.deleteUserStatus = "failed";
+        state.deleteError = action.payload.message;
+      })
+      // fetch single user
+      .addCase(fetchUser.pending, (state) => {
+        state.userStatus = "loading";
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.userStatus = "succeeded";
+        state.user = action.payload;
+        state.userError = null; // Clear any fetchUser error
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        state.userStatus = "failed";
+        state.userError = action.payload.message;
+      })
+      // update user
+      .addCase(updateUser.pending, (state) => {
+        state.updatedUserStatus = "loading";
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.updatedUserStatus = "succeeded";
+        state.user = action.payload; // Update the user in the state
+        state.updatedError = null; // Clear any update error
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.updatedUserStatus = "failed";
+        state.updatedError = action.payload.message;
+      })
   },
 });
 

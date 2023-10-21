@@ -17,7 +17,7 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const { order, orderStatus, error } = useSelector((state) => state.order);
+  const {  orderError, orderStatus } = useSelector((state) => state.order);
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
@@ -31,7 +31,10 @@ const PlaceOrderScreen = () => {
     e.preventDefault()
     try {
       const orderData = {
-        orderItems: cart.cartItems,
+        orderItems: cart.cartItems.map(item => ({
+          ...item,
+          image: item.images[0]  // Capture only the first image
+      })),
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
         itemsPrice: cart.itemsPrice,
@@ -44,8 +47,8 @@ const PlaceOrderScreen = () => {
 
       dispatch(clearCartItems())
       navigate(`/order/${orderResponse._id}`)
-    } catch (error) {
-      toast.error(error.message || error)
+    } catch (err) {
+      toast.error(err.message || err)
     }
   }
 
@@ -82,7 +85,7 @@ const PlaceOrderScreen = () => {
                       <Row>
                         <Col md={1}>
                           <Image
-                            src={item.image}
+                            src={item.images[0]}
                             alt={item.name}
                             fluid
                             rounded
@@ -94,7 +97,7 @@ const PlaceOrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x AED{item.price} = AED{item.qty * item.price}
+                          {item.qty} x AED {item.price} = AED {(item.qty * item.price).toFixed(2)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -147,7 +150,7 @@ const PlaceOrderScreen = () => {
                     </ListGroup.Item>
 
                     <ListGroup.Item>
-                      {error && <Message variant='danger'>{error}</Message>}
+                      {orderError && <Message variant='danger'>{orderError}</Message>}
                     </ListGroup.Item>
 
                     <ListGroup.Item>
@@ -159,7 +162,7 @@ const PlaceOrderScreen = () => {
                       >
                         Place Order
                       </Button>
-                      {/* {isLoading && <Loader/>} */}
+                      {orderStatus === 'loading' && <Loader/>}
                     </ListGroup.Item>
 
                     

@@ -2,7 +2,7 @@ import { Alert } from "react-bootstrap"
 
 const Message = ({variant, children}) => {
   return (
-    <Alert variant={variant}>
+    <Alert variant={variant} className="mt-5 pt-4">
         {children}
     </Alert>
   )
