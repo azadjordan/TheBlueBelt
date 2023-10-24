@@ -31,7 +31,7 @@ const Header = () => {
         <Container>
           <Navbar.Brand as={Link} to="/">
             <img className="logo-image" src={logo} alt="AzadShop" />
-            TheBlueBelt
+            <span style={{fontSize: '1.4rem'}}>The Blue Belt</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

@@ -1,9 +1,9 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/orderModel.js";
-
 import Product from '../models/productModel.js';
 import { calcPrices } from '../utils/calcPrices.js';
-import { verifyPayPalPayment, checkIfNewTransaction } from '../utils/paypal.js';
+import sendEmail from "../utils/sendEmails.js";
+
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -50,6 +50,18 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
     const createdOrder = await order.save();
 
+    // Sending an email with the required order info
+    await sendEmail({
+      to: ['azadkkurdi@gmail.com', 'almomani95hu@gmail.com'],
+      subject: 'New Order Received',
+      text: `
+  New order from: ${req.user?.name} (${req.user?.email})
+  Order ID: ${createdOrder._id}
+  Total Price: ${createdOrder.totalPrice}
+  `
+    });
+
+
     res.status(201).json(createdOrder);
   }
 });
@@ -81,24 +93,10 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  console.log(`Processing payment for order: ${req.params.id}`);
-  console.log(`Received PayPal transaction ID from request body: ${req.body.id}`);
-
-  const { verified, value } = await verifyPayPalPayment(req.body.id);
-  if (!verified) throw new Error('Payment not verified');
-
-  // check if this transaction has been used before
-  const isNewTransaction = await checkIfNewTransaction(Order, req.body.id);
-  if (!isNewTransaction) throw new Error('Transaction has been used before');
 
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    // check the correct amount was paid
-    const paidCorrectAmount = order.totalPrice.toString() === value;
-    console.log(`Expected payment value: ${order.totalPrice.toString()}, Received payment value: ${value}`);
-    
-    if (!paidCorrectAmount) throw new Error('Incorrect amount paid');
 
     order.isPaid = true;
     order.paidAt = Date.now();
@@ -110,16 +108,12 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
-
-    console.log(`Order ${req.params.id} updated to paid status.`);
     res.json(updatedOrder);
   } else {
-    console.log(`Order with ID ${req.params.id} not found.`);
     res.status(404);
     throw new Error('Order not found');
   }
 });
-
 
 // @desc    Update order to delivered
 // @route   PUT /api/orders/:id/deliver

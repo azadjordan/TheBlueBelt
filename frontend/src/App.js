@@ -29,6 +29,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Header />
+      <div id="content">
       <main style={{ paddingTop: '80px' }}>
         <Container>
           <Routes>
@@ -66,6 +67,7 @@ const App = () => {
           </Routes>
         </Container>
       </main>
+      </div>
       <Footer />
       <ToastContainer />
     </BrowserRouter>

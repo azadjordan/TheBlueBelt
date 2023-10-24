@@ -13,8 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchOrder, updateOrderToDelivered } from "../slices/orderSlice";
 import { toast } from "react-toastify";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
-import { getPayPalClientId, payOrder } from "../slices/paypalSlice";
+
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -23,8 +22,6 @@ const OrderScreen = () => {
   useEffect(() => {
     // Fetch the order details for this specific order ID
     dispatch(fetchOrder(orderId));
-    // Fetch the PayPal Client ID needed for making PayPal transactions
-    dispatch(getPayPalClientId());
   }, [dispatch, orderId]);
 
   // get the placed order:
@@ -35,83 +32,9 @@ const OrderScreen = () => {
   // get the update order to delivered fields
   const { deliveredOrderStatus } = useSelector((state) => state.order)
 
-  // Get PayPal script status and dispatch function for script management
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
-
-  // PayPal-related state:
-  const { clientId, loadingPay, loadingPaypal, paypalError } = useSelector(
-    (state) => state.paypal
-  );
-
   // get the user info:
   const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    // loading paypal script
-    if (!paypalError && loadingPaypal !== "loading" && clientId) {
-      const loadPayPalScript = async () => {
-        paypalDispatch({
-          type: "resetOptions",
-          value: {
-            "client-id": clientId,
-            currency: "AED",
-          },
-        });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
-      };
-      if (singleOrder && !singleOrder.isPaid) {
-        if (!window.paypal) {
-          loadPayPalScript();
-        }
-      }
-    }
-  }, [singleOrder, clientId, loadingPaypal, paypalError, paypalDispatch]);
-
-  // if(window.paypal){
-  //   console.log(window.paypal)
-  // }
-
-  function onApprove(data, actions) {
-    return actions.order.capture().then(async function (details) {
-      try {
-        await dispatch(payOrder({ orderId, paymentData: details })).unwrap();
-        await dispatch(fetchOrder(orderId)).unwrap();
-        toast.success("Payment successful");
-      } catch (err) {
-        toast.error(err?.data?.message || err.message);
-      }
-    });
-  }
-
-  // async function onApproveTest() {
-  //   try {
-  //     await dispatch(payOrder({ orderId, details: { payer: {} } })).unwrap();
-  //     await dispatch(fetchOrder(orderId)).unwrap();
-  //     toast.success("Payment successful");
-  //   } catch (err) {
-  //     toast.error(err?.data?.message || err.message);
-  //   }
-  // }
-
-  function onError(err) {
-    toast.error(err.message);
-  }
-
-  function createOrder(data, actions) {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: {
-              value: singleOrder.totalPrice,
-            },
-          },
-        ],
-      })
-      .then((orderId) => {
-        return orderId;
-      });
-  }
 
   const deliverOrderHandler = async () => {
     try {
@@ -126,7 +49,6 @@ const OrderScreen = () => {
   return (
     <>
       {orderError && <Message variant="danger">{orderError}</Message>}
-      {paypalError && <Message variant="danger">{paypalError}</Message>}
       {orderStatus === "loading" ? (
         <Loader />
       ) : userInfo && singleOrder && orderStatus === 'succeeded' && (
@@ -226,33 +148,7 @@ const OrderScreen = () => {
                       <Col>AED {singleOrder.totalPrice}</Col>
                     </Row>
                   </ListGroup.Item>
-                  {!singleOrder.isPaid && (
-                    <ListGroup.Item>
-                      {loadingPay === "loading" && <Loader />}
-                      {isPending || loadingPaypal === "loading" ? (
-                        // there's actually no need for (loadingPaypal === 'loading') 
-                        // because initializing paypal script that has isPending DEPENDS on the clientId 
-                        // which is related to loadingPaypal
-                        <Loader />
-                      ) : (
-                        <div>
-                          {/* <Button
-                            onClick={onApproveTest}
-                            style={{ marginBottom: "10px" }}
-                          >
-                            Test Pay Order
-                          </Button> */}
-                          <div>
-                            <PayPalButtons
-                              createOrder={createOrder}
-                              onApprove={onApprove}
-                              onError={onError}
-                            ></PayPalButtons>
-                          </div>
-                        </div>
-                      )}
-                    </ListGroup.Item>
-                  )}
+
                   {deliveredOrderStatus === 'loading' && <Loader />}
 
                   {userInfo && userInfo.isAdmin
