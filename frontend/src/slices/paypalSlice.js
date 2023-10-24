@@ -19,8 +19,6 @@ export const getPayPalClientId = createAsyncThunk(
 export const payOrder = createAsyncThunk(
   "order/payOrder",
   async ({ orderId, paymentData }, { rejectWithValue }) => {
-    console.log('hi');
-    console.log(paymentData);
     try {
       const { data } = await axios.put(
         `/api/orders/${orderId}/pay`,
