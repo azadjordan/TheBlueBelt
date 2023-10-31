@@ -30,12 +30,13 @@ export const logout = createAsyncThunk(
 // Async thunk action to register
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ name, email, password }, { rejectWithValue }) => {
+  async ({ name, email, password, phoneNumber }, { rejectWithValue }) => {
     try {
       const { data } = await axios.post("/api/users", {
         name,
         email,
         password,
+        phoneNumber
       });
       return data;
     } catch (err) {
@@ -47,12 +48,13 @@ export const register = createAsyncThunk(
 // Async thunk action to update profile
 export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
-  async ({ name, email, password }, { rejectWithValue }) => {
+  async ({ name, email, password, phoneNumber }, { rejectWithValue }) => {
     try {
       const { data } = await axios.put("/api/users/profile", {
         name,
         email,
         password,
+        phoneNumber
       });
       return data;
     } catch (err) {
@@ -103,11 +105,12 @@ export const fetchUser = createAsyncThunk(
 // Async thunk action to update user by ID
 export const updateUser = createAsyncThunk(
   "auth/updateUser",
-  async ({ id, name, email, isAdmin }, { rejectWithValue }) => {
+  async ({ id, name, email, phoneNumber, isAdmin }, { rejectWithValue }) => {
     try {
       const { data } = await axios.put(`/api/users/${id}`, {
         name,
         email,
+        phoneNumber,
         isAdmin,
       });
       return data;

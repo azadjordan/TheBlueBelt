@@ -8,7 +8,7 @@ function addDecimals(num) {
       orderItems.reduce((acc, item) => acc + item.price * item.qty, 0)
     );
     // Calculate the shipping price
-    const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
+    const shippingPrice = addDecimals(itemsPrice > 300 ? 0 : 30);
     // Calculate the tax price
     const taxPrice = addDecimals(Number((0.15 * itemsPrice).toFixed(2)));
     // Calculate the total price

@@ -26,8 +26,8 @@ const sendEmail = async (options) => {
         Data: options.subject
       },
       Body: {
-        Text: {
-          Data: options.text
+        Html: {
+          Data: options.html || options.text // Use HTML if provided, otherwise fall back to text
         }
       }
     }
@@ -35,5 +35,6 @@ const sendEmail = async (options) => {
 
   await sesClient.send(new SendEmailCommand(mailOptions));
 }
+
 
 export default sendEmail;

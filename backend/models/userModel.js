@@ -1,42 +1,46 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-      },
+    },
     email: {
         type: String,
         required: true,
         unique: true,
-      },
-      password: {
+    },
+    password: {
         type: String,
         required: true,
-      },
-      isAdmin: {
+    },
+    isAdmin: {
         type: Boolean,
         required: true,
         default: false,
-      },
+    },
+    phoneNumber: {
+        type: String,
+        default: '000-000-0000'  // default phone number value
+    }
 }, {
     timestamps: true,
-})
+});
 
 userSchema.methods.matchPassword = async function(enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password)
+  return await bcrypt.compare(enteredPassword, this.password);
 }
 
 userSchema.pre('save', async function(next) {
-  if(!this.isModified('password')){ // if wer're just saving some user data but we are not dealing with the password then it's just gonna move on (next)
-    next()
+  if(!this.isModified('password')) {
+    next();
   }
 
-  const salt = await bcrypt.genSalt(10)
-  this.password = await bcrypt.hash(this.password, salt)
-})
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema);
 
-export default User
+export default User;

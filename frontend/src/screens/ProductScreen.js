@@ -84,7 +84,7 @@ const ProductScreen = () => {
               <Col md={4}>
                 <ListGroup variant="flush">
                   <ListGroup.Item>
-                    <h3>{product.name}</h3>
+                    <h2>{product.name}</h2>
                   </ListGroup.Item>
                   {/* <ListGroup.Item>
                     <Rating
@@ -92,6 +92,7 @@ const ProductScreen = () => {
                       text={`${product.numReviews} reviews`}
                     />
                   </ListGroup.Item> */}
+                  <ListGroup.Item> Size: <strong>{product.dimensions}</strong> </ListGroup.Item>
                   <ListGroup.Item>Price: AED {product.price}</ListGroup.Item>
                   <ListGroup.Item>Description: {product.description}</ListGroup.Item>
                 </ListGroup>

@@ -12,6 +12,8 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // 1. Add state for phone number
+
   const [errorFields, setErrorFields] = useState({});
 
   const dispatch = useDispatch();
@@ -34,6 +36,7 @@ const RegisterScreen = () => {
     if (!email) errors.email = true;
     if (!password) errors.password = true;
     if (!confirmPassword) errors.confirmPassword = true;
+    if (!phoneNumber) errors.phoneNumber = true; // Add phone number validation
 
     setErrorFields(errors);
 
@@ -51,7 +54,7 @@ const RegisterScreen = () => {
     }
 
     try {
-      await dispatch(register({ name, email, password })).unwrap();
+      await dispatch(register({ name, email, password, phoneNumber })).unwrap();
       navigate("/");
     } catch (err) {
       toast.error(err?.message || "An error occurred");
@@ -76,6 +79,17 @@ const RegisterScreen = () => {
             onChange={(e) => setName(e.target.value)}
           ></Form.Control>
         </Form.Group>
+
+        <Form.Group controlId="phoneNumber" className="my-3">
+        <Form.Label>Phone Number</Form.Label>
+        <Form.Control
+          style={inputStyle("phoneNumber")} 
+          type="text"
+          placeholder="Enter phone number"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+        ></Form.Control>
+      </Form.Group>
 
         <Form.Group controlId="email" className="my-3">
           <Form.Label>Email Address</Form.Label>

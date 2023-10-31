@@ -70,7 +70,10 @@ const CartScreen = () => {
                         </Col>
                       </Row>
                       <div>
-                        <strong>Price:</strong> AED{item.price}
+                        <strong>Price:</strong> AED {item.price}
+                      </div>
+                      <div>
+                        <strong>Size:</strong> {item.dimensions}
                       </div>
 
                       <div style={{ display: "flex", alignItems: "center", marginTop: '5px' }}>

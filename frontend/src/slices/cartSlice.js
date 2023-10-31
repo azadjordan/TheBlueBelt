@@ -1,18 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { updateCart } from '../utils/cartUtils';
+import { addDecimals, updateCart } from '../utils/cartUtils';
 
-// add to cart action
-// export const addProductToCart = createAsyncThunk(
-//     'cart/addProductToCart',
-//     async () => {
-//       const { data } = await axios.post('/api/cart');
-//       return data;
-//     }
-//   );
 
 // Fill the cart if any item/s were added to it
 const initialState = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : 
-{cartItems: [], shipingAddress: {}, paymentMethod: 'PayPal'}
+{cartItems: [], shipingAddress: {}, paymentMethod: 'Later'}
 
 
 
@@ -48,16 +40,10 @@ const cartSlice = createSlice({
             state.cartItems=[]
             return updateCart(state)
         },
-        resetCart: (state)=> (state = initialState)
-
-    // extraReducers: (builder) => {
-    //   builder
-    //     // Fetch All Products
-    //     .addCase(addProductToCart.fulfilled, (state, action) => {
-    //     })
-
+        resetCart: (state)=> (state = initialState),
+          
      },
 })
 
-export const {clearCartItems, addToCart, removeFromCart, saveShippingAddress, savePaymentMethod, resetCart} = cartSlice.actions
+export const {clearCartItems, addToCart, removeFromCart, saveShippingAddress, savePaymentMethod, resetCart } = cartSlice.actions
 export default cartSlice.reducer

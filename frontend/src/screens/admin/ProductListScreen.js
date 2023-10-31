@@ -21,28 +21,29 @@ const ProductListScreen = () => {
 
     useEffect(() => {
         if (pageNumber) {
-            dispatch(fetchProducts({pageNumber}));
+            dispatch(fetchProducts({ pageNumber }));
         } else {
             dispatch(fetchProducts('1'))
         }
-      }, [dispatch, pageNumber]);
+    }, [dispatch, pageNumber]);
 
-      const deleteHandler = async (id) => {
+    const deleteHandler = async (id) => {
         if (window.confirm('Are you sure?')) {
-          try {
-            await dispatch(deleteProduct(id)).unwrap();
-            toast.success('Product deleted successfully');
-          } catch (err) {
-            console.log(err);
-            toast.error(err?.message || 'An error occurred');
-          }
+            try {
+                await dispatch(deleteProduct(id)).unwrap();
+                toast.success('Product deleted successfully');
+            } catch (err) {
+                console.log(err);
+                toast.error(err?.message || 'An error occurred');
+            }
         }
-      };
+    };
 
     const createProductHandler = async () => {
         if (window.confirm('Are you sure you want to create a new product?')) {
             try {
                 await dispatch(createProduct()).unwrap()
+                toast.success('Product Created!')
             } catch (err) {
                 toast.error(err?.data?.message || err.error)
             }
@@ -52,8 +53,19 @@ const ProductListScreen = () => {
     return (
         <>
             <Row className="align-items-center">
+            <h1>Products</h1>
+
                 <Col>
-                    <h1>Products</h1>
+                <Row>
+                        <Col className="py-4">
+                            {createProductStatus === 'loading' || deletedProductStatus === 'loading' ?
+
+                                (<Loader />)
+                                : (
+                                    <h3 className="py-1">Total Products: {data?.products?.length}</h3>
+                                )}
+                        </Col>
+                    </Row>
                 </Col>
                 <Col className="text-end">
                     <Button className="btn-sm m-3" onClick={createProductHandler}>
@@ -62,51 +74,46 @@ const ProductListScreen = () => {
                 </Col>
             </Row>
 
-            {productsStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>{error.data.message || error}</Message> : (
+            {productsStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>{error?.data?.message || error?.message || error}</Message> : (
                 <>
-                    <Row>
-                        <Col>
-                            {createProductStatus === 'loading' || deletedProductStatus === 'loading' ?
-
-                                (<Loader />)
-                                : (
-                                    <h3>Total Products: {data?.products?.length}</h3>
-                                )}
-                        </Col>
-                    </Row>
+                    
 
 
-                    <Table striped hover bordered responsive className='table-sm'>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>NAME</th>
-                                <th>PRICE</th>
-                                <th>CATEGORY</th>
-                                <th>BRAND</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productsStatus === 'succeeded' && data?.products.map((product) => (
-                                <tr key={product._id}>
-                                    <td>{product._id}</td>
-                                    <td>{product.name}</td>
-                                    <td>AED {product.price}</td>
-                                    <td>{product.category}</td>
-                                    <td>{product.brand}</td>
-                                    <td>
-                                        <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
-                                            <FaEdit />
-                                        </Button>
-                                        <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
-                                            <FaTrash />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                    <Table striped hover bordered responsive className='table-sm py-3'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>PRICE</th>
+            <th>M.COST</th> 
+            <th>SOURCE</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {productsStatus === 'succeeded' && data?.products.map((product) => (
+            <tr key={product._id}>
+                <td>{product._id}</td>
+                <td>{product.name}</td>
+                <td>AED {product.price}</td>
+                <td>{product.manuCost || '-'}</td> 
+                <td>
+                    {product.source || '-'}
+                </td>
+                <td>
+                    <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
+                        <FaEdit />
+                    </Button>
+                    <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
+                        <FaTrash />
+                    </Button>
+                </td>
+            </tr>
+        ))}
+    </tbody>
+</Table>
+
+
                 </>
             )}
             <Paginate pages={data.pages} page={data.page} isAdmin={true} />

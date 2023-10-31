@@ -9,7 +9,26 @@ import sendEmail from "../utils/sendEmails.js";
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = asyncHandler(async (req, res) => {
-  const { orderItems, shippingAddress, paymentMethod } = req.body;
+  const { orderItems, shippingAddress, paymentMethod, couponCode } = req.body;
+
+  let discountAmount = 0;
+
+if (couponCode) {
+  const coupon = await Coupon.findOne({ code: couponCode });
+
+  if (!coupon) {
+    res.status(400);
+    throw new Error('Invalid coupon code');
+  }
+
+  if (new Date(coupon.expirationDate) < new Date()) {
+    res.status(400);
+    throw new Error('Coupon has expired');
+  }
+
+  discountAmount = coupon.discountAmount;
+}
+
 
   if (orderItems && orderItems.length === 0) {
     res.status(400);
@@ -35,7 +54,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
     // calculate prices
     const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
-      calcPrices(dbOrderItems);
+      calcPrices(dbOrderItems, discountAmount);
 
     const order = new Order({
       orderItems: dbOrderItems,
@@ -49,18 +68,47 @@ const addOrderItems = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
+    // Extract order items into an HTML list
+    const orderedItemsHTML = createdOrder.orderItems.map(item => `
+    <tr>
+      <td>${item.name}</td>
+      <td>${item.qty}</td>
+      <td>${item.dimensions}</td>
+    </tr>
+  `).join('');
+  
 
-    // Sending an email with the required order info
-    await sendEmail({
-      to: ['azadkkurdi@gmail.com', 'almomani95hu@gmail.com'],
-      subject: 'New Order Received',
-      text: `
-  New order from: ${req.user?.name} (${req.user?.email})
-  Order ID: ${createdOrder._id}
-  Total Price: ${createdOrder.totalPrice}
+const currentDate = new Date().toLocaleString(); // This will give you the current date and time in a readable format.
+
+await sendEmail({
+  to: ['azadkkurdi@gmail.com', 'almomani95hu@gmail.com'],
+  subject: 'New Order Received',
+  html: `
+    <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px;">
+      <h3 style="text-align: center; color: darkblue;"> New Order </h3>
+      <p><strong>Date:</strong> ${currentDate}</p>
+      <p><strong>Client:</strong> <span style="color: blue;">${req.user?.name}</span></p>
+      <p><strong>Email:</strong> ${req.user?.email}</p>
+      <p><strong>Phone:</strong> ${req.user?.phoneNumber}</p>
+      <p><strong>Order ID:</strong> ${createdOrder._id}</p>
+      <p><strong>Delivery:</strong> <span style="color: red;">${createdOrder.shippingAddress.city}</span> </p>
+      <p><strong>Payment:</strong> AED ${createdOrder.totalPrice} (VAT included)</p>
+      <p><strong>Products:</strong></p>
+      <table border="1" cellspacing="0" cellpadding="10" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Dimensions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orderedItemsHTML}
+        </tbody>
+      </table>
+    </div>
   `
-    });
-
+});
 
     res.status(201).json(createdOrder);
   }
@@ -70,7 +118,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 // @route   GET /api/orders/myorders
 // @access  Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({user: req.user._id})
+  const orders = await Order.find({ user: req.user._id })
   res.status(200).json(orders)
 });
 
@@ -80,7 +128,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate('user', 'name email')
 
-  if(order){
+  if (order) {
     res.status(200).json(order)
 
   } else {
@@ -122,14 +170,14 @@ const updateOrderToDelivered = asyncHandler(async (req, res) => {
   console.log("hi");
   const order = await Order.findById(req.params.id)
 
-  if(order){
+  if (order) {
     order.isDelivered = true
     order.deliveredAt = Date.now()
 
     const updatedOrder = await order.save()
     res.json(updatedOrder); // Send the updated order back in the response
 
-    
+
   } else {
     res.status(404)
     throw new Error('Order not found')

@@ -10,9 +10,6 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-
-
-
 // Async thunk action to create a new product
 export const createProduct = createAsyncThunk(
   'products/createProduct',
@@ -41,19 +38,6 @@ export const deleteProduct = createAsyncThunk(
 )
 
 
-
-// Async thunk action to create a review for a product
-export const createProductReview = createAsyncThunk(
-  'products/createProductReview',
-  async ({ productId, review }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`/api/products/${productId}/reviews`, review);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
 
 // Async thunk action to fetch top rated products
 export const fetchTopRatedProducts = createAsyncThunk(
@@ -94,12 +78,26 @@ export const fetchProduct = createAsyncThunk(
       return data;
     } catch (error) {
       // Extract the error message and reject the thunk with it.
-      return rejectWithValue(error.response ? error.response.data.message : error.message);
+      return rejectWithValue(error.response.data);
     }
   }
 );
 
-
+// Add an asynchronous thunk for deleting product images.
+export const deleteProductImages = createAsyncThunk(
+  'products/deleteProductImagesStatus',
+  async (productId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/products/${productId}/images`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
 
 
 // Initial state
@@ -123,6 +121,8 @@ const initialState = {
   topRatedProducts: [],
   topRatedProductsStatus: 'idle',
   topRatedError: null,
+  deleteImagesStatus: 'idle',
+  deleteImagesError: null,
 };
 
 // Slice
@@ -154,7 +154,7 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProduct.rejected, (state, action) => {
         state.productStatus = 'failed';
-        state.error = action.payload; // Assuming the payload contains the error message.
+        state.error = action.payload.message;
       })
       // Create Product
       .addCase(createProduct.pending, (state) => {
@@ -196,20 +196,6 @@ const productsSlice = createSlice({
         state.deletedProductStatus = 'failed';
         state.error = action.error.message;
       })
-      // Create Product Review
-      .addCase(createProductReview.pending, (state) => {
-        state.createdReviewStatus = 'loading';
-        state.reviewError = null; // reset the reviewError when a new request is made
-      })
-      .addCase(createProductReview.fulfilled, (state, action) => {
-        state.createdReviewStatus = 'succeeded';
-        state.product.reviews = [...state.product.reviews, action.payload];
-        state.reviewError = null; // reset the reviewError upon successful review creation
-      })
-      .addCase(createProductReview.rejected, (state, action) => {
-        state.createdReviewStatus = 'failed';
-        state.reviewError = action.error.message; // set the reviewError here
-      })
       // Fetch Top Rated Products
       .addCase(fetchTopRatedProducts.pending, (state) => {
         state.topRatedProductsStatus = 'loading';
@@ -221,6 +207,20 @@ const productsSlice = createSlice({
       .addCase(fetchTopRatedProducts.rejected, (state, action) => {
         state.topRatedProductsStatus = 'failed';
         state.topRatedError = action.error.message;
+      })
+      // Delete Images
+      .addCase(deleteProductImages.pending, (state) => {
+        state.deleteImagesStatus = 'loading';
+      })
+      .addCase(deleteProductImages.fulfilled, (state, action) => {
+        state.deleteImagesStatus = 'succeeded';
+        if (state.product) {
+          state.product.images = [];
+      }
+      })
+      .addCase(deleteProductImages.rejected, (state, action) => {
+        state.deleteImagesStatus = 'failed';
+        state.deleteImagesError = action.error.message;
       });
   },
 });

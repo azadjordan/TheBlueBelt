@@ -21,16 +21,14 @@ import OrderListScreen from "./screens/admin/OrderListScreen";
 import ProductListScreen from "./screens/admin/ProductListScreen";
 import ProductEditScreen from "./screens/admin/ProductEditScreen";
 import UserListScreen from "./screens/admin/UserListScreen";
-import UserEditScreen from "./screens/admin/UserEditScreen";
-
-
+import UserEditScreen from "./screens/admin/UserEditScreen"
 
 const App = () => {
   return (
     <BrowserRouter>
       <Header />
-      <div id="content">
-      <main style={{ paddingTop: '80px' }}>
+      <div id="content" className="pt-4 pb-4">
+      <main className="pt-5">
         <Container>
           <Routes>
             <Route path="/" element={<HomeScreen />} />

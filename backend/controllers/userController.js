@@ -17,6 +17,7 @@ const authUser = asyncHandler(async(req,res) => {
         res.status(200).json({
             _id: user._id,
             name: user.name,
+            phoneNumber: user.phoneNumber,
             email: user.email,
             isAdmin: user.isAdmin
         })
@@ -30,7 +31,7 @@ const authUser = asyncHandler(async(req,res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async(req,res) => {
-    const {name, email, password} = req.body // password encryption is inside the user model
+    const {name, phoneNumber, email, password} = req.body // password encryption is inside the user model
     const userExists = await User.findOne({email})
 
     if(userExists){
@@ -40,6 +41,7 @@ const registerUser = asyncHandler(async(req,res) => {
 
     const user = await User.create({
         name,
+        phoneNumber,
         email,
         password,
     })
@@ -50,6 +52,7 @@ const registerUser = asyncHandler(async(req,res) => {
         res.status(201).json({
             _id: user._id,
             name: user.name,
+            phoneNumber: user.phoneNumber,
             email: user.email,
             isAdmin: user.isAdmin,
         })
@@ -110,6 +113,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
+        user.phoneNumber = req.body.phoneNumber || user.phoneNumber
         
         if (req.body.password) {
             user.password = req.body.password; // here the updated password will get hashed and stored with assistance of 'pre' in the user Model
@@ -122,6 +126,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
                 _id: updatedUser._id,
                 name: updatedUser.name,
                 email: updatedUser.email,
+                phoneNumber: updatedUser.phoneNumber,
                 isAdmin: updatedUser.isAdmin,
             });
         } catch (error) {
@@ -187,6 +192,7 @@ const updateUser = asyncHandler(async(req,res) => {
     if (user){
         user.name = req.body.name || user.name
         user.email = req.body.email || user.email
+        user.phoneNumber = req.body.phoneNumber || user.phoneNumber
         user.isAdmin = Boolean(req.body.isAdmin)
 
         const updatedUser = await user.save()
@@ -195,6 +201,7 @@ const updateUser = asyncHandler(async(req,res) => {
             _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
+            phoneNumber: updatedUser.phoneNumber,
             isAdmin: updatedUser.isAdmin,
         })
     } else {

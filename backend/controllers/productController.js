@@ -3,16 +3,43 @@ import Product from "../models/productModel.js"
 import { deleteImage } from "../config/s3.js";
 
 
+// @desc    Delete all images of a product from S3
+// @route   DELETE /api/products/:id/images
+// @access  Private/Admin
+const deleteProductImages = asyncHandler(async (req, res) => {
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+      for (const imageUrl of product.images) {
+          const rawKey = imageUrl.split('.com/')[1];
+          const Key = decodeURIComponent(rawKey); // Decode the extracted key
+          if (Key) await deleteImage(Key);
+      }
+
+      // Clear the images array in the product document
+      product.images = [];
+      await product.save();
+
+      res.status(200).json({ message: 'Images deleted successfully' });
+  } else {
+      res.status(404);
+      throw new Error('Product not found');
+  }
+});
+
+
 // @desc    Update a product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-  const { name, price, description, brand, category, countInStock } = req.body;
+  const { name, price, description, brand, category, countInStock, manuCost, dimensions, source } = req.body;
 
   const product = await Product.findById(req.params.id);
 
   if (product) {
     let imageUrls = product.images || []; // Initialize with existing images, if any.
+
     if (req.files && req.files.length > 0) {
       // If the sample image is present in the array at the first index, remove it
       if (imageUrls[0] === '/images/sample.jpg') {
@@ -34,6 +61,9 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.brand = brand || product.brand;
     product.category = category || product.category;
     product.countInStock = countInStock || product.countInStock;
+    product.manuCost = manuCost || product.manuCost;
+    product.dimensions = dimensions || product.dimensions;
+    product.source = source || product.source;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -43,26 +73,29 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
+
 // @desc    Delete a product and its images from S3
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
+
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    for (const imageUrl of product.images) {
-      const Key = imageUrl.split('.com/')[1];
-      if (Key) await deleteImage(Key);
-    }
+      for (const imageUrl of product.images) {
+          const rawKey = imageUrl.split('.com/')[1];
+          const Key = decodeURIComponent(rawKey); // Decode the extracted key
+          if (Key) await deleteImage(Key);
+      }
 
-    // Try to delete and assume success unless an error is thrown
-    await Product.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'Product deleted successfully' });
+      await Product.deleteOne({ _id: req.params.id });
+      res.status(200).json({ message: 'Product deleted successfully' });
   } else {
-    res.status(404);
-    throw new Error('Product not found');
+      res.status(404);
+      throw new Error('Product not found');
   }
 });
+
 
 // @desc    Create a product
 // @route   POST /api/products
@@ -77,6 +110,9 @@ const createProduct = asyncHandler(async (req, res) => {
     category: 'Sample category',
     countInStock: 0,
     numReviews: 0,
+    manuCost: 0,
+    dimensions: 'number-unit number-unit',
+    source: 'sample source',
     description: 'Sample description',
   })
 
@@ -167,4 +203,4 @@ const getTopProducts = asyncHandler(async (req, res) => {
 
 
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopProducts }
+export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopProducts, deleteProductImages }

@@ -15,6 +15,8 @@ const ProfileScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(""); // 1. Add state for phone number
+
   const dispatch = useDispatch();
 
   const {
@@ -23,13 +25,20 @@ const ProfileScreen = () => {
     error,
   } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (userInfo) {
-      setName(userInfo.name);
-      setEmail(userInfo.email);
-      dispatch(fetchMyOrders())
-    }
-  }, [userInfo, dispatch]);
+// This useEffect is for setting state from userInfo
+useEffect(() => {
+  if (userInfo) {
+    setName(userInfo.name);
+    setEmail(userInfo.email);
+    setPhoneNumber(userInfo.phoneNumber || ""); 
+  }
+}, [userInfo]);
+
+// This useEffect is for fetching orders and will only run once (when the component mounts)
+useEffect(() => {
+  dispatch(fetchMyOrders());
+}, [dispatch]);
+
 
   const {orders, orderStatus: ordersStatus, orderError: ordersError} = useSelector((state)=> state.order)
 
@@ -43,7 +52,7 @@ const ProfileScreen = () => {
 
     try {
       await dispatch(
-        updateProfile({ _id: userInfo._id, name, email, password })
+        updateProfile({ _id: userInfo._id, name, email, password, phoneNumber })
       ).unwrap();
       toast.success("Profile Updated");
     } catch (err) {
@@ -71,6 +80,16 @@ const ProfileScreen = () => {
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
           </Form.Group>
+
+          <Form.Group controlId="phoneNumber" className="my-2">
+          <Form.Label>Phone Number</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter phone number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
 
           <Form.Group controlId="email" className="my-2">
             <Form.Label>Email Address</Form.Label>
@@ -119,7 +138,7 @@ const ProfileScreen = () => {
            <Message variant='danger'>
          {ordersError?.data?.message || ordersError?.error || ordersError} 
          </Message>
-         ) : ordersStatus === 'succeeded' && userInfo && orders && (
+         ) : ordersStatus === 'succeeded' && orders && (
           <Table striped hover responsive className='table-sm'>
             <thead>
               <tr>
