@@ -49,7 +49,7 @@ const ProductScreen = () => {
         Go Back
       </Link>
 
-      {productStatus === 'loading' || !userInfo ? (<Loader />) :
+      {productStatus === 'loading'  ? (<Loader />) :
         productStatus === 'failed' ? (
           <Message variant='danger'>
             {error?.message || error}
