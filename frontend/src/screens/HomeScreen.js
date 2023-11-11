@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Button } from 'react-bootstrap';
 import Product from '../components/Product.js';
@@ -12,10 +12,13 @@ import ProductCarousel from '../components/ProductCarousel.js';
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const { pageNumber, keyword } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const specialSearch = (keyword) => {
-    navigate(`/search/${keyword}`);
+  const [activeButton, setActiveButton] = useState('');
+
+  const specialSearch = (searchKeyword) => {
+    setActiveButton(searchKeyword); // Set the active button
+    navigate(`/search/${searchKeyword}`);
   };
 
   // Fetching from the Redux state
@@ -27,38 +30,45 @@ const HomeScreen = () => {
     dispatch(fetchProducts({ pageNumber, keyword }));
   }, [dispatch, pageNumber, keyword]);
 
+  // Function to get button variant
+  const getButtonVariant = (buttonKeyword) => {
+    return activeButton === buttonKeyword ? 'primary' : 'light';
+  };
+
   return (
     <>
-      {!keyword ? <ProductCarousel /> : (<Link to='/' className='btn btn-light mb-4'>
-        Go Back
-      </Link>)}
+      {!keyword ? <ProductCarousel /> : (
+        <Link to='/' className='btn btn-light mb-4'>
+          Go Back
+        </Link>
+      )}
 
       <h1>Latest Ribbons</h1>
       {/* Special search buttons */}
       <div className="my-3">
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('special')}>
+        <Button variant={getButtonVariant('special')} onClick={() => specialSearch('special')}>
           Special
         </Button>
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('satin')}>
+        <Button variant={getButtonVariant('satin')} onClick={() => specialSearch('satin')}>
           Satin
         </Button>
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('W10')}>
+        <Button variant={getButtonVariant('W10')} onClick={() => specialSearch('W10')}>
           1 inch
         </Button>
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('W05')}>
+        <Button variant={getButtonVariant('W05')} onClick={() => specialSearch('W05')}>
           0.5 inch
         </Button>
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('L100')}>
+        <Button variant={getButtonVariant('L100')} onClick={() => specialSearch('L100')}>
           100 yards
         </Button>
-        <Button variant="light" className="mx-1" onClick={() => specialSearch('L35')}>
+        <Button variant={getButtonVariant('L35')} onClick={() => specialSearch('L35')}>
           35 yards
         </Button>
       </div>
       {productsStatus === 'loading' && <Loader />}
       {productsStatus === 'succeeded' && (
         <>
-          <Row style={{marginBottom: '20px'}}>
+          <Row style={{ marginBottom: '20px' }}>
             {data.products.map((product) => (
               <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3}>
                 <Product product={product} />
@@ -68,8 +78,7 @@ const HomeScreen = () => {
           <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
         </>
       )}
-      {
-        productsStatus === 'failed' &&
+      {productsStatus === 'failed' &&
         <Message variant='danger'>{error?.data?.message || error.error || error}</Message>
       }
     </>
