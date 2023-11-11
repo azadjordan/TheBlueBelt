@@ -14,12 +14,59 @@ const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
   const navigate = useNavigate();
 
-  const [activeButton, setActiveButton] = useState('');
+  const [activeFilters, setActiveFilters] = useState(new Set());
+
 
   const specialSearch = (searchKeyword) => {
-    setActiveButton(searchKeyword); // Set the active button
-    navigate(`/search/${searchKeyword}`);
+    setActiveFilters(prevFilters => {
+      const newFilters = new Set(prevFilters);
+
+      // Handle mutually exclusive scenarios for lengths
+      if (searchKeyword === '1-inch' && newFilters.has('0.5-inch')) {
+        newFilters.delete('0.5-inch');
+      } else if (searchKeyword === '0.5-inch' && newFilters.has('1-inch')) {
+        newFilters.delete('1-inch');
+      }
+
+      if (searchKeyword === '100-yd' && newFilters.has('35-yd')) {
+        newFilters.delete('35-yd');
+      } else if (searchKeyword === '35-yd' && newFilters.has('100-yd')) {
+        newFilters.delete('100-yd');
+      }
+
+      // Handle mutually exclusive scenarios for types
+      if (searchKeyword === 'special' && newFilters.has('satin')) {
+        newFilters.delete('satin');
+      } else if (searchKeyword === 'satin' && newFilters.has('special')) {
+        newFilters.delete('special');
+      }
+
+      // Toggle the clicked filter
+      if (newFilters.has(searchKeyword)) {
+        newFilters.delete(searchKeyword);
+      } else {
+        newFilters.add(searchKeyword);
+      }
+      return newFilters;
+    });
   };
+
+    // Function to determine if a button should be disabled
+    const isButtonDisabled = (buttonKeyword) => {
+      if ((buttonKeyword === '0.5-inch' && activeFilters.has('1-inch')) || 
+          (buttonKeyword === '1-inch' && activeFilters.has('0.5-inch')) ||
+          (buttonKeyword === 'special' && activeFilters.has('satin')) ||
+          (buttonKeyword === 'satin' && activeFilters.has('special'))) {
+        return true;
+      }
+      if ((buttonKeyword === '35-yd' && activeFilters.has('100-yd')) || 
+          (buttonKeyword === '100-yd' && activeFilters.has('35-yd'))) {
+        return true;
+      }
+      return false;
+    };
+  
+
 
   // Fetching from the Redux state
   const productsData = useSelector((state) => state.products);
@@ -27,13 +74,16 @@ const HomeScreen = () => {
 
   // Fetch products
   useEffect(() => {
-    dispatch(fetchProducts({ pageNumber, keyword }));
-  }, [dispatch, pageNumber, keyword]);
+    const filters = Array.from(activeFilters).join(',');
+    dispatch(fetchProducts({ pageNumber, keyword: filters }));
+  }, [dispatch, pageNumber, activeFilters]);  
+
 
   // Function to get button variant
   const getButtonVariant = (buttonKeyword) => {
-    return activeButton === buttonKeyword ? 'primary' : 'light';
+    return activeFilters.has(buttonKeyword) ? 'primary' : 'light';
   };
+  
 
   return (
     <>
@@ -46,22 +96,22 @@ const HomeScreen = () => {
       <h1>Latest Ribbons</h1>
       {/* Special search buttons */}
       <div className="my-3">
-        <Button variant={getButtonVariant('special')} onClick={() => specialSearch('special')}>
+        <Button variant={getButtonVariant('special')} disabled={isButtonDisabled('special')} onClick={() => specialSearch('special')}>
           Special
         </Button>
-        <Button variant={getButtonVariant('satin')} onClick={() => specialSearch('satin')}>
+        <Button variant={getButtonVariant('satin')} disabled={isButtonDisabled('satin')} onClick={() => specialSearch('satin')}>
           Satin
         </Button>
-        <Button variant={getButtonVariant('W10')} onClick={() => specialSearch('W10')}>
+        <Button variant={getButtonVariant('1-inch')} disabled={isButtonDisabled('1-inch')} onClick={() => specialSearch('1-inch')}>
           1 inch
         </Button>
-        <Button variant={getButtonVariant('W05')} onClick={() => specialSearch('W05')}>
+        <Button variant={getButtonVariant('0.5-inch')} disabled={isButtonDisabled('0.5-inch')} onClick={() => specialSearch('0.5-inch')}>
           0.5 inch
         </Button>
-        <Button variant={getButtonVariant('L100')} onClick={() => specialSearch('L100')}>
+        <Button variant={getButtonVariant('100-yd')} disabled={isButtonDisabled('100-yd')} onClick={() => specialSearch('100-yd')}>
           100 yards
         </Button>
-        <Button variant={getButtonVariant('L35')} onClick={() => specialSearch('L35')}>
+        <Button variant={getButtonVariant('35-yd')} disabled={isButtonDisabled('35-yd')} onClick={() => specialSearch('35-yd')}>
           35 yards
         </Button>
       </div>
