@@ -52,18 +52,13 @@ const ProductListScreen = () => {
 
     return (
         <>
-            <Row className="align-items-center">
-            <h1>Products</h1>
+            <Row className="align-items-center py-3">
+                <h1>Products</h1>
 
                 <Col>
-                <Row>
-                        <Col className="py-4">
-                            {createProductStatus === 'loading' || deletedProductStatus === 'loading' ?
-
-                                (<Loader />)
-                                : (
-                                    <h3 className="py-1">Total Products: {data?.products?.length}</h3>
-                                )}
+                    <Row>
+                        <Col className="py-2">
+                            <h3 className="py-1">Total Products: {data?.products?.length}</h3>
                         </Col>
                     </Row>
                 </Col>
@@ -76,42 +71,42 @@ const ProductListScreen = () => {
 
             {productsStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>{error?.data?.message || error?.message || error}</Message> : (
                 <>
-                    
+
 
 
                     <Table striped hover bordered responsive className='table-sm py-3'>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>PRICE</th>
-            <th>M.COST</th> 
-            <th>SOURCE</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {productsStatus === 'succeeded' && data?.products.map((product) => (
-            <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>AED {product.price}</td>
-                <td>{product.manuCost || '-'}</td> 
-                <td>
-                    {product.source || '-'}
-                </td>
-                <td>
-                    <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
-                        <FaEdit />
-                    </Button>
-                    <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
-                        <FaTrash />
-                    </Button>
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</Table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAME</th>
+                                <th>PRICE</th>
+                                <th>M.COST</th>
+                                <th>SOURCE</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {productsStatus === 'succeeded' && data?.products.map((product) => (
+                                <tr key={product._id}>
+                                    <td>{product._id}</td>
+                                    <td>{product.name}</td>
+                                    <td>AED {product.price}</td>
+                                    <td>{product.manuCost || '-'}</td>
+                                    <td>
+                                        {product.source || '-'}
+                                    </td>
+                                    <td>
+                                        <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
+                                            <FaEdit />
+                                        </Button>
+                                        <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
+                                            <FaTrash />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
 
 
                 </>

@@ -231,6 +231,7 @@ const authSlice = createSlice({
       // update user
       .addCase(updateUser.pending, (state) => {
         state.updatedUserStatus = "loading";
+        console.log("loading");
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.updatedUserStatus = "succeeded";

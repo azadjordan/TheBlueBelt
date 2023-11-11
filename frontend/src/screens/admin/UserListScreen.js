@@ -3,7 +3,7 @@ import Loader from '../../components/Loader'
 import { fetchAllUsers, deleteUser } from '../../slices/authSlice'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Col, Row } from 'react-bootstrap';
 import { FaTimes, FaTrash, FaEdit, FaCheck } from 'react-icons/fa';
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
@@ -21,25 +21,33 @@ const UserListScreen = () => {
         }
     }, [dispatch, userInfo])
 
-    const deleteHandler = async(id) => {
+    const deleteHandler = async (id) => {
         if (window.confirm("Are you sure you want to delete this user?")) {
             try {
                 await dispatch(deleteUser(id)).unwrap()
                 toast.success('User Deleted')
             } catch (err) {
-                toast.error(err?.data?.message || err.error)
+                toast.error(err?.message || 'Error')
             }
         }
-      };
+    };
 
     const { users, usersStatus, error, deleteUserStatus, deleteError } = useSelector((state) => state.auth)
 
     return (
         <>
-            <h1>Users</h1>
-            {deleteError && <Message>{deleteError}</Message>}
-            {deleteUserStatus === 'loading' && <Loader/>}
+            <Row>
+                <Col className='py-3'>
+                    <h1>Users</h1>
+                    <h3>Total Users: {users.length}</h3>
+
+                </Col>
+                <Col>
+                    {deleteUserStatus === 'loading' && <Loader />}
+                </Col>
+            </Row>
             {usersStatus === 'loading' ? (<Loader />) : error ? (<Message>{error}</Message>) : (
+                <>
                 <Table striped hover bordered responsive className='table-sm'>
                     <thead>
                         <tr>
@@ -77,6 +85,7 @@ const UserListScreen = () => {
                         ))}
                     </tbody>
                 </Table>
+                </>
             )}
         </>
 

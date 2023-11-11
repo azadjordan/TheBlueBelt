@@ -6,7 +6,7 @@ import Coupon from "../models/couponModel.js";
 // @route   POST /api/coupons
 // @access  Private/Admin
 const createCoupon = asyncHandler(async (req, res) => {
-    const { code, discountAmount, expirationDate } = req.body;
+    const { code, discountPercentage, expirationDate } = req.body;
     
     const couponExists = await Coupon.findOne({ code });
 
@@ -17,7 +17,7 @@ const createCoupon = asyncHandler(async (req, res) => {
 
     const coupon = new Coupon({
         code,
-        discountAmount,
+        discountPercentage,
         expirationDate,
     });
 
@@ -54,13 +54,13 @@ const getCouponById = asyncHandler(async (req, res) => {
 // @route   PUT /api/coupons/:id
 // @access  Private/Admin
 const updateCoupon = asyncHandler(async (req, res) => {
-    const { code, discountAmount, expirationDate } = req.body;
+    const { code, discountPercentage, expirationDate } = req.body;
 
     const coupon = await Coupon.findById(req.params.id);
 
     if (coupon) {
         coupon.code = code || coupon.code;
-        coupon.discountAmount = discountAmount || coupon.discountAmount;
+        coupon.discountPercentage = discountPercentage || coupon.discountPercentage;
         coupon.expirationDate = expirationDate || coupon.expirationDate;
 
         const updatedCoupon = await coupon.save();
@@ -98,6 +98,7 @@ const validateCoupon = asyncHandler(async (req, res) => {
     }
 
     const coupon = await Coupon.findOne({ code });
+    console.log(coupon);
 
     if (!coupon) {
         res.status(404);
@@ -113,7 +114,8 @@ const validateCoupon = asyncHandler(async (req, res) => {
 
     res.json({ 
         message: 'Coupon is valid',
-        discountAmount: coupon.discountAmount 
+        discountPercentage: coupon.discountPercentage,
+        code: coupon.code
     });
 });
 

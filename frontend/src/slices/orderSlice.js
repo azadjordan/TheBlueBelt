@@ -65,16 +65,33 @@ export const updateOrderToDelivered = createAsyncThunk(
   }
 );
 
+// Async thunk action to update order to paid
+export const updateOrderToPaid = createAsyncThunk(
+  "order/updateOrderToPaid",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(`/api/orders/${orderId}/pay`);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+
 
 const initialState = {
   singleOrder: {},
   orders: [],
-  allOrders: [], 
+  allOrders: [],
   orderStatus: "idle",
   orderError: null,
   deliveredOrder: null,
   deliveredOrderStatus: "idle",
   deliveredOrderError: null,
+  paidOrder: null,
+  paidOrderStatus: "idle",
+  paidOrderError: null,
 };
 
 const orderSlice = createSlice({
@@ -90,6 +107,7 @@ const orderSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.orderStatus = "succeeded";
         state.singleOrder = action.payload;
+        state.orderError = null
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.orderStatus = "failed";
@@ -131,18 +149,36 @@ const orderSlice = createSlice({
         state.orderStatus = "failed";
         state.orderError = action.payload.message;
       })
-   // update order to delivered
-   .addCase(updateOrderToDelivered.pending, (state) => {
-    state.deliveredOrderStatus = "loading";
-  })
-  .addCase(updateOrderToDelivered.fulfilled, (state, action) => {
-    state.deliveredOrderStatus = "succeeded";
-    state.deliveredOrder = action.payload;
-  })
-  .addCase(updateOrderToDelivered.rejected, (state, action) => {
-    state.deliveredOrderStatus = "failed";
-    state.deliveredOrderError = action.payload.message;
-  });
+      // update order to delivered
+      .addCase(updateOrderToDelivered.pending, (state) => {
+        state.deliveredOrderStatus = "loading";
+      })
+      .addCase(updateOrderToDelivered.fulfilled, (state, action) => {
+        state.deliveredOrderStatus = "succeeded";
+        state.singleOrder.isDelivered = true;
+        state.singleOrder.deliveredAt = action.payload.deliveredAt; // Assuming your API sends back the updated timestamp
+        state.deliveredOrder = action.payload;
+      })
+      .addCase(updateOrderToDelivered.rejected, (state, action) => {
+        state.deliveredOrderStatus = "failed";
+        state.deliveredOrderError = action.payload.message;
+      })
+
+      // update order to paid
+      .addCase(updateOrderToPaid.pending, (state) => {
+        state.paidOrderStatus = "loading";
+      })
+      .addCase(updateOrderToPaid.fulfilled, (state, action) => {
+        state.paidOrderStatus = "succeeded";
+        state.singleOrder.isPaid = true;
+        state.singleOrder.paidAt = action.payload.paidAt; // Assuming your API sends back the updated timestamp
+        state.paidOrder = action.payload;
+      })
+      .addCase(updateOrderToPaid.rejected, (state, action) => {
+        state.paidOrderStatus = "failed";
+        state.paidOrderError = action.payload.message;
+      });
+
   },
 });
 

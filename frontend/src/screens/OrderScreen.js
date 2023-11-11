@@ -11,9 +11,8 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchOrder, updateOrderToDelivered } from "../slices/orderSlice";
+import { fetchOrder, updateOrderToDelivered, updateOrderToPaid } from "../slices/orderSlice";
 import { toast } from "react-toastify";
-
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -30,21 +29,34 @@ const OrderScreen = () => {
   );
 
   // get the update order to delivered fields
-  const { deliveredOrderStatus } = useSelector((state) => state.order)
+  const { deliveredOrderStatus, paidOrderStatus } = useSelector((state) => state.order)
 
   // get the user info:
   const { userInfo } = useSelector((state) => state.auth);
 
 
   const deliverOrderHandler = async () => {
-    try {
-      await dispatch(updateOrderToDelivered(orderId)).unwrap()
-      await dispatch(fetchOrder(orderId)).unwrap();  // Re-fetch the order details
-      toast.success('Order delivered')
-    } catch (err) {
-      toast.error(err?.data?.message || err.message)
+    if (window.confirm('Mark it as delivered?')) {
+      try {
+        await dispatch(updateOrderToDelivered(orderId)).unwrap()
+        toast.success('Order delivered')
+      } catch (err) {
+        toast.error(err?.data?.message || err.message)
+      }
     }
   }
+  
+  const markOrderAsPaidHandler = async () => {
+    if (window.confirm('Mark it as paid?')) {
+      try {
+        await dispatch(updateOrderToPaid(orderId)).unwrap();
+        toast.success('Order marked as paid');
+      } catch (err) {
+        toast.error(err?.data?.message || err.message);
+      }
+    }
+  };
+  
 
   return (
     <>
@@ -68,11 +80,12 @@ const OrderScreen = () => {
                   <p>
                     <strong>Address: </strong>
                     {singleOrder.shippingAddress?.address},{" "}
-                    {singleOrder.shippingAddress?.city}{" "}
-                    {singleOrder.shippingAddress?.postalCode},{" "}
-                    {singleOrder.shippingAddress?.country}
+                    {singleOrder.shippingAddress?.Emirate}{" "}
+                    {singleOrder.shippingAddress?.city},{" "}
                   </p>
-                  {singleOrder.isDelivered ? (
+                  {deliveredOrderStatus === 'loading' ? (
+                    <Loader/>
+                  ) : singleOrder.isDelivered ? (
                     <Message variant="success">
                       Delivered on {singleOrder.deliveredAt}
                     </Message>
@@ -88,7 +101,9 @@ const OrderScreen = () => {
                     <strong>Method: </strong>
                     {singleOrder.paymentMethod}
                   </p>
-                  {singleOrder.isPaid ? (
+                  {paidOrderStatus === 'loading' ? (
+                    <Loader/>
+                  ) : singleOrder.isPaid ? (
                     <Message variant="success">
                       Paid on {singleOrder.paidAt}
                     </Message>
@@ -149,16 +164,24 @@ const OrderScreen = () => {
                     </Row>
                   </ListGroup.Item>
 
-                  {deliveredOrderStatus === 'loading' && <Loader />}
-
-                  {userInfo && userInfo.isAdmin
-                    && singleOrder.isPaid && !singleOrder.isDelivered && (
-                      <ListGroup.Item>
-                        <Button type="button" className="btn btn-block" onClick={deliverOrderHandler}>
-                          Mark As Delivered
-                        </Button>
-                      </ListGroup.Item>
-                    )}
+                  {userInfo && userInfo.isAdmin && (
+                    <>
+                      {!singleOrder.isPaid && (
+                        <ListGroup.Item>
+                          <Button type="button" className="btn btn-block" onClick={markOrderAsPaidHandler}>
+                            Mark As Paid
+                          </Button>
+                        </ListGroup.Item>
+                      )}
+                      {!singleOrder.isDelivered && (
+                        <ListGroup.Item>
+                          <Button type="button" className="btn btn-block" onClick={deliverOrderHandler}>
+                            Mark As Delivered
+                          </Button>
+                        </ListGroup.Item>
+                      )}
+                    </>
+                  )}
                 </ListGroup>
               </Card>
             </Col>

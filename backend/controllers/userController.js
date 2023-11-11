@@ -107,13 +107,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
             throw new Error('Name must be a string');
         }
         
-        if (req.body.email && typeof req.body.email !== 'string') {
-            throw new Error('Email must be a string');
+        // Compare the email in the request with the one in the database
+        if (req.body.email && req.body.email !== user.email) {
+            throw new Error('Email address cannot be changed');
         }
 
         user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-        user.phoneNumber = req.body.phoneNumber || user.phoneNumber
+        user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
         
         if (req.body.password) {
             user.password = req.body.password; // here the updated password will get hashed and stored with assistance of 'pre' in the user Model
@@ -141,6 +141,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         throw new Error('User Not Found');
     }
 });
+
 
 // @desc    Get users
 // @route   GET /api/users

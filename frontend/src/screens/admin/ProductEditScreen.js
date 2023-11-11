@@ -86,13 +86,12 @@ const ProductEditScreen = () => {
         const files = Array.from(e.target.files);
         let newImages = [];
         let isAllFilesImages = true;
+        const acceptedMimetypes = ['image/jpeg', 'image/png', 'image/webp'];
 
         // Checking if all files are images
         files.forEach(file => {
-            if (!file.type.startsWith('image/')) {
-                e.target.value = '';
+            if (!acceptedMimetypes.includes(file.type)) {
                 isAllFilesImages = false;
-                toast.error('All files must be images.');
             } else {
                 newImages.push({
                     id: Date.now() + Math.random(),
@@ -103,8 +102,13 @@ const ProductEditScreen = () => {
 
         if (isAllFilesImages) {
             setUploadingImages(prevState => [...prevState, ...newImages]);
+        } else {
+            e.target.value = '';  // Clear the file input if any of the files are not accepted images.
+            toast.error('Only JPEG, PNG, and WEBP images are allowed.');
         }
     };
+
+
 
     const removeImageHandler = (id) => {
         setUploadingImages(prevImages => prevImages.filter(img => img.id !== id));
@@ -113,7 +117,7 @@ const ProductEditScreen = () => {
     const deleteImagesHandler = async () => {
         // Display a confirmation message to the user
         const confirmDelete = window.confirm('Are you sure you want to delete all the images of this product from the database?');
-    
+
         // If the user confirms the deletion, proceed
         if (confirmDelete) {
             try {
@@ -124,7 +128,7 @@ const ProductEditScreen = () => {
             }
         }
     };
-    
+
 
     return (
         <>

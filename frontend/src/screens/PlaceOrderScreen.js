@@ -12,8 +12,7 @@ import { clearCartItems } from "../slices/cartSlice.js";
 import { createOrder } from "../slices/orderSlice";
 import { validateCoupon } from "../slices/couponSlice";
 import { resetDiscount } from '../slices/couponSlice';
-
-
+import { FaTimes} from 'react-icons/fa';
 
 
 
@@ -22,13 +21,12 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const [coupon, setCoupon] = useState("");
-  const [isCouponApplied, setIsCouponApplied] = useState(false);
-
-
 
   const { orderError, orderStatus } = useSelector((state) => state.order);
-  const { discount, couponError, couponStatus } = useSelector((state) => state.coupon);
+  const { discount, couponStatus, discountCode } = useSelector((state) => state.coupon);
+
+  const [coupon, setCoupon] = useState(discountCode || '');
+
 
   // Calculate discounted price
   const discountedItemsPrice = Number(cart.itemsPrice) - (Number(cart.itemsPrice) * (Number(discount)));
@@ -39,6 +37,7 @@ const PlaceOrderScreen = () => {
   useEffect(() => {
     if (!cart.shippingAddress.address) {
       navigate("/shipping");
+      toast.error('Shipping details are missing')
     } else if (!cart.paymentMethod) {
       navigate("/payment");
     }
@@ -60,7 +59,6 @@ const PlaceOrderScreen = () => {
         totalPrice: cart.totalPrice,
         couponCode: coupon,
       }
-
       const orderResponse = await dispatch(createOrder(orderData)).unwrap()
 
       dispatch(clearCartItems())
@@ -74,13 +72,9 @@ const PlaceOrderScreen = () => {
     try {
       // Dispatch the validateCoupon action here
       const result = await dispatch(validateCoupon(coupon)).unwrap();
-      console.log(result);
-
-      if (result && result.discountAmount) {
+      if (result && result.discountPercentage) {
         // Update the cart items price
-        // dispatch(applyCouponDiscount(result.discountAmount));
         toast.success(result.message)
-        setIsCouponApplied(true);
       }
     } catch (err) {
       // Display a toast notification for the error
@@ -101,11 +95,13 @@ const PlaceOrderScreen = () => {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
-                {cart.shippingAddress.postalCode},{" "}
-                {cart.shippingAddress.country}
+                <strong>Address: </strong>{cart.shippingAddress.address}
+                <br/>
+                <strong>Emirate:</strong> {cart.shippingAddress.emirate}
+                <br/>
+                <strong>City:</strong> {cart.shippingAddress.city}
               </p>
+            
             </ListGroup.Item>
 
             <ListGroup.Item>
@@ -132,7 +128,7 @@ const PlaceOrderScreen = () => {
                           />
                         </Col>
                         <Col>
-                          <Link to={`/products/${item.product}`}>
+                          <Link to={`/product/${item._id}`}>
                             {item.name}
                           </Link>
                         </Col>
@@ -191,7 +187,7 @@ const PlaceOrderScreen = () => {
 
               <Card>
                 <ListGroup variant="flush">
-                  <ListGroup.Item style={{ backgroundColor: isCouponApplied ? 'lightyellow' : '#f5f5f5' }}>
+                  <ListGroup.Item style={{ backgroundColor: couponStatus === 'succeeded' ? '#E8F4FB' : '#f5f5f5' }}>
                     <Row>
                       <h5>Enter a valid coupon:</h5>
                       <Col>
@@ -199,23 +195,21 @@ const PlaceOrderScreen = () => {
                           type="text"
                           value={coupon}
                           onChange={(e) => setCoupon(e.target.value)}
-                          placeholder="Enter coupon code"
-                          disabled={isCouponApplied}
+                          placeholder={"Enter coupon code"}
+                          disabled={couponStatus === 'succeeded'}
                         />
                       </Col>
-                      {isCouponApplied ? (
+                      {couponStatus === 'succeeded' ? (
                         <Col md="auto">
                           <Button
                             type="button"
                             variant="danger"
-                            className=""
                             onClick={() => {
-                              setIsCouponApplied(false);
                               setCoupon('');
                               dispatch(resetDiscount());
                             }}
                           >
-                            Remove
+                            <FaTimes/>
                           </Button>
                         </Col>
                       ) : (
@@ -226,13 +220,15 @@ const PlaceOrderScreen = () => {
                             className=""
                             onClick={handleAddCoupon}
                           >
-                            Add Code
+                            Apply
                           </Button>
                         </Col>
                       )}
                     </Row>
-                    {isCouponApplied ? (
-                      <p style={{ color: 'green' }}>Discount added!</p>
+                    {couponStatus === 'succeeded' ? (
+                      <>
+                      <p style={{ color: 'green' }}>Discount added! <span style={{ color: 'darkblue' }}>Total: (AED {totalAfterDiscount})</span> </p>  
+                      </>
                     ) : null}
                   </ListGroup.Item>
                 </ListGroup>
@@ -252,9 +248,16 @@ const PlaceOrderScreen = () => {
                   className="btn-block btn-lg"
                   disabled={cart.cartItems.length === 0}
                   onClick={placeOrderHandler}
+                  variant="warning"
                 >
-                  Place Order
+                 Place Order
                 </Button>
+              </ListGroup.Item>
+              <ListGroup.Item style={{color: 'grey'}}>
+              <h6>Note:</h6>
+                <ul>
+                      <li>You are <strong>NOT</strong> going to be charged after this step. We will contact you later for payment.</li>
+                </ul>
               </ListGroup.Item>
             </ListGroup>
           </Card>

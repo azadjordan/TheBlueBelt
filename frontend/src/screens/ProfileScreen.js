@@ -23,6 +23,7 @@ const ProfileScreen = () => {
     userInfo,
     status: authStatus,
     error,
+    status,
   } = useSelector((state) => state.auth);
 
 // This useEffect is for setting state from userInfo
@@ -44,26 +45,27 @@ useEffect(() => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-
+  
     try {
       await dispatch(
-        updateProfile({ _id: userInfo._id, name, email, password, phoneNumber })
-      ).unwrap();
+        updateProfile({ _id: userInfo._id, name, password, phoneNumber })
+      ).unwrap(); // Notice we removed 'email' from this data
       toast.success("Profile Updated");
     } catch (err) {
-      toast.error(err?.message || "An unknown error occurred");
+      toast.error(err?.message || "Error");
     }
   };
+  
 
   return (
 
-    <Row>
-    {authStatus === "loading" ? (<Loader/>) : error ? (
+    <Row className="py-5">
+    {authStatus === "loading" || status === "loading" ? (<Loader/>) : error ? (
            <Message variant='danger'>
          {error?.data?.message || error?.error} 
          </Message>
@@ -97,6 +99,8 @@ useEffect(() => {
               type="email"
               placeholder="Enter email"
               value={email}
+              readOnly 
+              disabled
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
           </Form.Group>

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { addDecimals, updateCart } from '../utils/cartUtils';
+import { updateCart } from '../utils/cartUtils';
 
 
 // Fill the cart if any item/s were added to it

@@ -17,7 +17,8 @@ export const validateCoupon = createAsyncThunk(
 const couponSlice = createSlice({
     name: "coupon",
     initialState: { 
-      discount: null, 
+      discount: null,
+      discountCode: null, 
       couponError: null,
       couponStatus: 'idle' 
     }, 
@@ -25,6 +26,7 @@ const couponSlice = createSlice({
       resetDiscount: (state) => {
         state.discount = null;
         state.couponError = null;
+        state.discountCode = null;
         state.couponStatus = 'idle';
       },
     },
@@ -35,14 +37,14 @@ const couponSlice = createSlice({
           state.couponError = null; 
         })
         .addCase(validateCoupon.fulfilled, (state, action) => {
-          state.discount = action.payload.discountAmount; 
+          state.discount = action.payload.discountPercentage; 
+          state.discountCode = action.payload.code
           state.couponStatus = 'succeeded'; 
           state.couponError = null; 
         })
         .addCase(validateCoupon.rejected, (state, action) => {
           state.couponStatus = 'failed'; 
-          state.couponError = action.payload; 
-          console.log(state.couponError);
+          state.couponError = action.payload.message; 
         });
     }
 });
