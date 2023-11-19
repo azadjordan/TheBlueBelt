@@ -120,7 +120,7 @@ const HomeScreen = () => {
         <>
           <Row style={{ marginBottom: '20px' }}>
             {data.products.map((product) => (
-              <Col key={product._id} xs={6} sm={6} md={6} lg={4} xl={3}>
+              <Col key={product._id} xs={6} sm={6} md={4} lg={3} xl={3}>
                 <Product product={product} />
               </Col>
             ))}

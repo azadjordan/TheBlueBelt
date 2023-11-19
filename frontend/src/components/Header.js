@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   return (
-    <header>
+    <header style={{ marginBottom: '5rem' }}>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect fixed="top">
         <Container>
           <Navbar.Brand as={Link} to="/">

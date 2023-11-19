@@ -34,9 +34,9 @@ const CartScreen = () => {
   };
 
   return (
-    <>
+    < >
       <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
-      <Row>
+      <Row className='mt-5'>
         <Col xs={12}  md={8} style={{paddingBottom: '30px'}}>
           {cartItems?.length === 0 ? (
             <Message>

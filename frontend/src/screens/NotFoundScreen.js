@@ -1,7 +1,7 @@
 // NotFoundScreen.js
 const NotFoundScreen = () => {
   return (
-    <div>
+    <div className='mt-5 pt-4'>
       <h1>404 Not Found</h1>
       <p>The page you are looking for does not exist.</p>
     </div>

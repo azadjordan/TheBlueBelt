@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
   return (
-    <Nav className="justify-content-center mb-4">
+    <Nav className="justify-content-center mb-3">
       <Nav.Item>
         {step1 ? (
           <Nav.Link as={Link} to="/cart">
@@ -30,7 +30,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
             Payment
           </Nav.Link>
         ) : (
-          <Nav.Link disabled>Payment</Nav.Link>
+          <Nav.Link disabled> Payment </Nav.Link>
         )}
       </Nav.Item>
 
@@ -40,7 +40,7 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
             Place Order
           </Nav.Link>
         ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
+          <Nav.Link disabled> Place Order </Nav.Link>
         )}
       </Nav.Item>
     </Nav>

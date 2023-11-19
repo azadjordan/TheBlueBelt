@@ -27,8 +27,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <Header />
-      <div id="content" className="pt-5 pb-4">
-      <main className="pt-5">
+      <div id="content">
+      <main>
         <Container>
           <Routes>
             <Route path="/" element={<HomeScreen />} />
