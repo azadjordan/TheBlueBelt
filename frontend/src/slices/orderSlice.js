@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { ORDERS_URL } from "../constants";
+
 
 
 export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (order, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/orders", order);
+      const { data } = await axios.post(`${ORDERS_URL}`, order);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -18,7 +20,7 @@ export const fetchOrder = createAsyncThunk(
   "order/fetchOrder",
   async (orderId, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/api/orders/${orderId}`);
+      const { data } = await axios.get(`${ORDERS_URL}/${orderId}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -31,7 +33,7 @@ export const fetchMyOrders = createAsyncThunk(
   "order/fetchMyOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get("/api/orders/mine");
+      const { data } = await axios.get(`${ORDERS_URL}/mine`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -44,7 +46,7 @@ export const fetchAllOrders = createAsyncThunk(
   "order/fetchAllOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get("/api/orders");
+      const { data } = await axios.get(`${ORDERS_URL}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -57,7 +59,7 @@ export const updateOrderToDelivered = createAsyncThunk(
   "order/updateOrderToDelivered",
   async (orderId, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(`/api/orders/${orderId}/deliver`);
+      const { data } = await axios.put(`${ORDERS_URL}/${orderId}/deliver`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -70,7 +72,7 @@ export const updateOrderToPaid = createAsyncThunk(
   "order/updateOrderToPaid",
   async (orderId, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(`/api/orders/${orderId}/pay`);
+      const { data } = await axios.put(`${ORDERS_URL}/${orderId}/pay`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);

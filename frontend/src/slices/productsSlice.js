@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { PRODUCTS_URL } from '../constants';
+
 
 // Async thunk action to fetch all products
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async ({ pageNumber = 1, keyword = '' }) => {
-    const { data } = await axios.get(`/api/products?pageNumber=${pageNumber}&keyword=${keyword}`);
+    const { data } = await axios.get(`${PRODUCTS_URL}?pageNumber=${pageNumber}&keyword=${keyword}`);
     return data;
   }
 );
@@ -15,7 +17,7 @@ export const createProduct = createAsyncThunk(
   'products/createProduct',
   async (newProduct, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post('/api/products', newProduct);
+      const { data } = await axios.post(`${PRODUCTS_URL}`, newProduct);
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -29,7 +31,7 @@ export const deleteProduct = createAsyncThunk(
   'products/deleteProduct',
   async (productId, { rejectWithValue }) => {
     try {
-      await axios.delete(`/api/products/${productId}`);
+      await axios.delete(`${PRODUCTS_URL}/${productId}`);
       return productId;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -43,7 +45,7 @@ export const deleteProduct = createAsyncThunk(
 export const fetchTopRatedProducts = createAsyncThunk(
   'products/fetchTopRatedProducts',
   async () => {
-    const { data } = await axios.get('/api/products/top'); // sending a get request to the endpoint for top rated products
+    const { data } = await axios.get(`${PRODUCTS_URL}/top`); // sending a get request to the endpoint for top rated products
     return data;
   }
 );
@@ -54,7 +56,7 @@ export const updateProduct = createAsyncThunk(
   async ({ productId, updatedFields }, { rejectWithValue }) => {
     try {
       const { data } = await axios.put(
-        `/api/products/${productId}`,
+        `${PRODUCTS_URL}/${productId}`,
         updatedFields,
         {
           headers: {
@@ -74,7 +76,7 @@ export const fetchProduct = createAsyncThunk(
   'products/fetchProduct',
   async (productId, { rejectWithValue }) => { // Notice the added { rejectWithValue }
     try {
-      const { data } = await axios.get(`/api/products/${productId}`);
+      const { data } = await axios.get(`${PRODUCTS_URL}/${productId}`);
       return data;
     } catch (error) {
       // Extract the error message and reject the thunk with it.
@@ -88,7 +90,7 @@ export const deleteProductImages = createAsyncThunk(
   'products/deleteProductImagesStatus',
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`/api/products/${productId}/images`, {
+      const response = await fetch(`${PRODUCTS_URL}/${productId}/images`, {
         method: 'DELETE',
       });
       const data = await response.json();

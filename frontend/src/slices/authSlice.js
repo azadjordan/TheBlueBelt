@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { USERS_URL } from "../constants";
+
 
 // Async thunk action to login
 export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/users/auth", { email, password });
+      const { data } = await axios.post( `${USERS_URL}/auth`, { email, password });
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -19,7 +21,7 @@ export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/users/logout");
+      const { data } = await axios.post(`${USERS_URL}/logout`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -32,7 +34,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async ({ name, email, password, phoneNumber }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.post("/api/users", {
+      const { data } = await axios.post(`${USERS_URL}`, {
         name,
         email,
         password,
@@ -50,7 +52,7 @@ export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
   async ({ name, email, password, phoneNumber }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put("/api/users/profile", {
+      const { data } = await axios.put(`${USERS_URL}/profile`, {
         name,
         email,
         password,
@@ -68,7 +70,7 @@ export const fetchAllUsers = createAsyncThunk(
   "auth/fetchAllUsers",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get("/api/users");
+      const { data } = await axios.get(`${USERS_URL}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -81,7 +83,7 @@ export const deleteUser = createAsyncThunk(
   "auth/deleteUser",
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await axios.delete(`/api/users/${id}`);
+      const { data } = await axios.delete(`${USERS_URL}/${id}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -94,7 +96,7 @@ export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/api/users/${id}`);
+      const { data } = await axios.get(`${USERS_URL}/${id}`);
       return data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -107,7 +109,7 @@ export const updateUser = createAsyncThunk(
   "auth/updateUser",
   async ({ id, name, email, phoneNumber, isAdmin }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(`/api/users/${id}`, {
+      const { data } = await axios.put(`${USERS_URL}/${id}`, {
         name,
         email,
         phoneNumber,
