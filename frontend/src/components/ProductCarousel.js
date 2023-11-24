@@ -16,7 +16,7 @@ const ProductCarousel = () => {
 
 
     return topRatedProductsStatus === 'loading' ? <Loader /> : topRatedError ? <Message variant='danger'>{topRatedError} </Message> : (
-        <Carousel pause='hover' className="bg-dark mb-4" >
+        <Carousel pause='hover' className="bg-dark mb-4 mt-0 pt-0" >
         
             {topRatedProducts.map(product => (
                 <Carousel.Item key={product._id}>

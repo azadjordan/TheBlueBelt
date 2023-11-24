@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
+dotenv.config();
 import path from "path";
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import multer from "multer";
 import multerS3 from "multer-s3";
 
-dotenv.config();
 
 
 const s3Client = new S3Client({
