@@ -28,7 +28,6 @@ const deleteProductImages = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Update a product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
@@ -73,7 +72,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc    Delete a product and its images from S3
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
@@ -95,7 +93,6 @@ const deleteProduct = asyncHandler(async (req, res) => {
       throw new Error('Product not found');
   }
 });
-
 
 // @desc    Create a product
 // @route   POST /api/products
