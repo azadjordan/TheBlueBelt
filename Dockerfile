@@ -11,10 +11,9 @@ RUN npm install
 
 RUN npm run build
 
-WORKDIR /app/backend
+WORKDIR /app
 
 RUN npm install
 
-WORKDIR /app
 
 CMD ["npm", "run", "dev"]
