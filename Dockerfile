@@ -7,7 +7,7 @@ COPY . .
 
 WORKDIR /app/frontend
 
-RUN npm install --production
+RUN npm install
 
 RUN npm run build
 
