@@ -6,7 +6,7 @@ const generateToken = (res, userId)=>{
         // Set JWT as JTTP-Only cookie
         res.cookie('jwt', token, {
             httpOnly: true,
-            secure: false,
+            secure: false, // when we have https it should be true
             sameSite: 'strict',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         })
