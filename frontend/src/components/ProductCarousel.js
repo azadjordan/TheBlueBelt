@@ -9,7 +9,7 @@ const ProductCarousel = () => {
     const dispatch = useDispatch()
     const { topRatedProducts, topRatedError } = useSelector((state) => state.products);
 
-    const carouselInterval = 2000; 
+    const carouselInterval = 2500; 
 
     useEffect(()=>{
         dispatch(fetchTopRatedProducts())
@@ -24,7 +24,7 @@ const ProductCarousel = () => {
                     <Link to={`/product/${product._id}`}>
                         <Image style={{ maxHeight: '400px', minHeight: "400px", maxWidth: "400px", minWidth: "400px" }} src={product.images[0]} alt={product.name} fluid />
                         <Carousel.Caption className='carousel-caption'>
-                            <h2>{product.name}</h2>
+                          <h2><span>{product.name}</span></h2>  
                         </Carousel.Caption>
                     </Link>
                 </Carousel.Item>
