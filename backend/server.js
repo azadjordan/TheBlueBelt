@@ -24,10 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // log every request
-app.use((req, res, next) => {
-  console.log(`PATH: [${req.path}]      METHOD: [${req.method}]`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`PATH: [${req.path}]      METHOD: [${req.method}]`);
+//   next();
+// });
 
 // cookie parser middleware
 app.use(cookieParser());
