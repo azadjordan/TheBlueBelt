@@ -82,6 +82,15 @@ const HomeScreen = () => {
   const getButtonVariant = (buttonKeyword) => {
     return activeFilters.has(buttonKeyword) ? 'primary' : 'light';
   };
+
+  const buttonsData = [
+    { text: 'Special', keyword: 'special' },
+    { text: 'Satin', keyword: 'satin' },
+    { text: '1 inch', keyword: '1-inch' },
+    { text: '0.5 inch', keyword: '0.5-inch' },
+    { text: '100 yards', keyword: '100-yd' },
+    { text: '35 yards', keyword: '35-yd' },
+  ];
   
 
   return (
@@ -94,25 +103,18 @@ const HomeScreen = () => {
 
       <h1>Latest Ribbons</h1>
       {/* Special search buttons */}
-      <div className="my-4">
-        <Button variant={getButtonVariant('special')} disabled={isButtonDisabled('special')} onClick={() => specialSearch('special')}>
-          Special
-        </Button>
-        <Button variant={getButtonVariant('satin')} disabled={isButtonDisabled('satin')} onClick={() => specialSearch('satin')}>
-          Satin
-        </Button>
-        <Button variant={getButtonVariant('1-inch')} disabled={isButtonDisabled('1-inch')} onClick={() => specialSearch('1-inch')}>
-          1 inch
-        </Button>
-        <Button variant={getButtonVariant('0.5-inch')} disabled={isButtonDisabled('0.5-inch')} onClick={() => specialSearch('0.5-inch')}>
-          0.5 inch
-        </Button>
-        <Button variant={getButtonVariant('100-yd')} disabled={isButtonDisabled('100-yd')} onClick={() => specialSearch('100-yd')}>
-          100 yards
-        </Button>
-        <Button variant={getButtonVariant('35-yd')} disabled={isButtonDisabled('35-yd')} onClick={() => specialSearch('35-yd')}>
-          35 yards
-        </Button>
+      <div className="my-3">
+        {buttonsData.map(({ text, keyword }) => (
+          <Button
+            key={keyword}
+            variant={getButtonVariant(keyword)}
+            disabled={isButtonDisabled(keyword)}
+            onClick={() => specialSearch(keyword)}
+            className="px-3 mx-1 my-1 shadowButton"
+          >
+            {text}
+          </Button>
+        ))}
       </div>
       {productsStatus === 'loading' && <Loader />}
       {productsStatus === 'succeeded' && (
