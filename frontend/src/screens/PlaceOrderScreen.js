@@ -35,7 +35,7 @@ const PlaceOrderScreen = () => {
 
 
   useEffect(() => {
-    if (!cart.shippingAddress.address) {
+    if (!cart.shippingAddress.address || !cart.shippingAddress.emirate || !cart.shippingAddress.city) {
       navigate("/shipping");
       toast.error('Shipping details are missing')
     } else if (!cart.paymentMethod) {

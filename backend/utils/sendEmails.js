@@ -1,6 +1,4 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-import nodemailer from "nodemailer";
-import sesTransport from "nodemailer-ses-transport";
 
 const sesClient = new SESClient({
   region: process.env.AWS_BUCKET_REGION,
@@ -10,9 +8,6 @@ const sesClient = new SESClient({
   }
 });
 
-const transporter = nodemailer.createTransport(sesTransport({
-  ses: sesClient
-}));
 
 // Function to send email
 const sendEmail = async (options) => {

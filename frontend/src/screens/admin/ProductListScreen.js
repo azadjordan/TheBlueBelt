@@ -16,7 +16,7 @@ const ProductListScreen = () => {
     const { pageNumber = '1' } = useParams();
 
 
-    const { data, productsStatus, createProductStatus, deletedProductStatus, error } = useSelector((state) => state.products)
+    const { data, productsStatus, error } = useSelector((state) => state.products)
 
 
     useEffect(() => {

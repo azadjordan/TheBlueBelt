@@ -32,7 +32,7 @@ const UserListScreen = () => {
         }
     };
 
-    const { users, usersStatus, error, deleteUserStatus, deleteError } = useSelector((state) => state.auth)
+    const { users, usersStatus, error, deleteUserStatus } = useSelector((state) => state.auth)
 
     return (
         <>

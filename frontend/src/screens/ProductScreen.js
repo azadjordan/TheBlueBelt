@@ -30,7 +30,7 @@ const ProductScreen = () => {
   const productsData = useSelector((state) => state.products);
   const { product, productStatus, error,   } = productsData;
 
-  const { userInfo  } = useSelector((state) => state.auth)
+  // const { userInfo  } = useSelector((state) => state.auth)
 
 
   // Fetch product details

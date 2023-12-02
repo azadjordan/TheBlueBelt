@@ -5,14 +5,13 @@ import Product from '../components/Product.js';
 import { fetchProducts } from '../slices/productsSlice.js';
 import Loader from '../components/Loader.js';
 import Message from '../components/Message.js';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Paginate from '../components/Paginate.js';
 import ProductCarousel from '../components/ProductCarousel.js';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
   const { pageNumber, keyword } = useParams();
-  const navigate = useNavigate();
 
   const [activeFilters, setActiveFilters] = useState(new Set());
 
