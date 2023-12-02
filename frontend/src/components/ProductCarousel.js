@@ -24,7 +24,7 @@ const ProductCarousel = () => {
                     <Link to={`/product/${product._id}`}>
                         <Image style={{ maxHeight: '400px', minHeight: "400px", maxWidth: "400px", minWidth: "400px" }} src={product.images[0]} alt={product.name} fluid />
                         <Carousel.Caption className='carousel-caption'>
-                          <h2><span>{product.name}</span></h2>  
+                        <div className="caption-text">{product.name}</div>
                         </Carousel.Caption>
                     </Link>
                 </Carousel.Item>

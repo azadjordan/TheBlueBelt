@@ -65,7 +65,7 @@ const OrderScreen = () => {
         <Loader />
       ) : userInfo && singleOrder && orderStatus === 'succeeded' && (
         <>
-          <h1>Order {singleOrder._id}</h1>
+          <h1 className="my-4">Order {singleOrder._id}</h1>
           <Row>
             <Col md={8}>
               <ListGroup variant="flush">

@@ -26,8 +26,8 @@ const Header = () => {
   };
 
   return (
-    <header style={{ marginBottom: '4rem' }}>
-      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect fixed="top">
+    <header>
+      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect >
         <Container>
           <Navbar.Brand as={Link} to="/">
             <img className="logo-image" src={logo} alt="AzadShop" />

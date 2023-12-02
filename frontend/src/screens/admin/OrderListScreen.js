@@ -27,7 +27,7 @@ const OrderListScreen = () => {
 
   return (
     <>
-      <h1>Orders</h1>
+      <h1 className='my-4'>Orders</h1>
       {orderStatus === 'loading' ? (<Loader />) : orderError ? (<Message>{orderError}</Message>) : (
         <Table striped hover bordered responsive className='table-sm'>
           <thead>

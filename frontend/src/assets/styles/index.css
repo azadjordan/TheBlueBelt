@@ -119,11 +119,30 @@ main {
   padding: 10px;
   white-space: nowrap;          /* Prevents text from wrapping to a new line */
   overflow: hidden;             /* Hides any text that overflows the element's width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.carousel-caption span {
-width: 50%;
+.caption-text {
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .caption-text {
+    width: 70%;
+  }
+  .carousel-caption {
+    width: 100%;
+    font-size: 1.6rem;
+  }
+}
+
 
 
 
