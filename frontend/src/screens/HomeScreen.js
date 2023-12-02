@@ -94,7 +94,7 @@ const HomeScreen = () => {
 
       <h1>Latest Ribbons</h1>
       {/* Special search buttons */}
-      <div className="my-3">
+      <div className="my-4">
         <Button variant={getButtonVariant('special')} disabled={isButtonDisabled('special')} onClick={() => specialSearch('special')}>
           Special
         </Button>

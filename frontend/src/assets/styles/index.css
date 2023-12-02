@@ -66,15 +66,6 @@ main {
   .review button {
     margin-top: 10px;
   }
-  
-  .carousel-caption {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-  }
 
   .logo-image {
     width: 40px;
@@ -111,12 +102,32 @@ main {
 }
 
 .carousel-caption {
+  color: white;
+  font-weight: bolder;
+  height: fit-content;
+  width: 91%;
+  border-radius: 100px;
   position: absolute;
-  width: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  }
+  top: 50%;                     /* Centers vertically */
+  left: 50%;                    /* Centers horizontally */
+  transform: translate(-50%, -50%); /* Shifts the caption */
+  background: black;
+  opacity: 0.2;
+  text-align: center;
+  padding: 10px;
+  white-space: nowrap;          /* Prevents text from wrapping to a new line */
+  overflow: hidden;             /* Hides any text that overflows the element's width */
+  text-overflow: ellipsis;      /* Adds an ellipsis to indicate text is hidden */
+  /* text-shadow:
+    -2px -2px 0 #000,  
+     2px -2px 0 #000,
+    -2px 2px 0 #000,
+     2px 2px 0 #000; */
+
+}
+
+
+
+
 
   
