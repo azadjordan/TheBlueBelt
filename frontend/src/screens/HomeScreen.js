@@ -116,6 +116,8 @@ const HomeScreen = () => {
             {text}
           </Button>
         ))}
+
+        
       </div>
       {productsStatus === 'loading' && <Loader />}
       {productsStatus === 'succeeded' && (
