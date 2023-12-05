@@ -1,7 +1,8 @@
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Product = ({ product }) => {
+  
   return (
     <Card className=" my-3  rounded home-product-card"> {/* <-- Added the home-product-card class here */}
       <Link to={`/product/${product._id}`}>
@@ -20,7 +21,9 @@ const Product = ({ product }) => {
 
         <Card.Text className="mb-0"><strong>{product.dimensions}</strong> </Card.Text>
 
-        <Card.Text as="h4" style={{ color: 'grey' }}>AED {product.price}</Card.Text>
+
+          <Card.Text as="h5" style={{ color: 'grey' }}>AED {product.price}</Card.Text>
+
       </Card.Body>
     </Card>
   );

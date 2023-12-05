@@ -124,7 +124,6 @@ const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 10
   const page = Number(req.query.pageNumber) || 1
 
-
   let keywordQuery = {};
   if (req.query.keyword) {
     const keywords = req.query.keyword.split(',').map(keyword => {
