@@ -143,7 +143,11 @@ main {
   }
 }
 
+.zoom-effect {
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
 
-
-
-  
+.zoom-effect:hover {
+  transform: scale(1.7); /* Adjust the scale value to control the zoom level */
+}

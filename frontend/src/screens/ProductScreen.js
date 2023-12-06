@@ -62,7 +62,7 @@ const ProductScreen = () => {
               <Col md={5}>
                 {/* Main Image */}
                 <div className="product-image-container">
-                  <Image className="d-block w-100" src={product.images[activeImage]} alt={product.name} fluid />
+                  <Image className="d-block zoom-effect" src={product.images[activeImage]} alt={product.name} fluid />
                 </div>
 
                 {/* Thumbnails */}
