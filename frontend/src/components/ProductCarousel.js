@@ -17,7 +17,7 @@ const ProductCarousel = () => {
 
 
     return topRatedError ? <Message variant='danger'>{topRatedError} </Message> : (
-        <Carousel pause='hover' className="bg-white mb-4" >
+        <Carousel pause='hover' className="bg-white mb-4 no-transition" >
         
             {topRatedProducts.map(product => (
                 <Carousel.Item key={product._id} interval={carouselInterval}>
