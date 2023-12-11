@@ -1,6 +1,8 @@
 import asyncHandler from "../middleware/asyncHandler.js"
 import User from "../models/userModel.js"
 import generateToken from "../utils/generateToken.js"
+import sendEmail from "../utils/sendEmails.js";
+
 
 
 // @desc    Auth user & get token
@@ -21,6 +23,7 @@ const authUser = asyncHandler(async(req,res) => {
             email: user.email,
             isAdmin: user.isAdmin
         })
+
     } else {
         res.status(401)
         throw new Error('Invalid Input or Not Registered')
@@ -31,36 +34,45 @@ const authUser = asyncHandler(async(req,res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async(req,res) => {
-    const {name, phoneNumber, email, password} = req.body // password encryption is inside the user model
-    const userExists = await User.findOne({email})
+    const { name, phoneNumber, email, password } = req.body;
+    const userExists = await User.findOne({ email });
 
-    if(userExists){
-        res.status(400)
-        throw new Error('User already exists')
+    if (userExists) {
+        res.status(400);
+        throw new Error('User already exists');
     }
 
-    const user = await User.create({
-        name,
-        phoneNumber,
-        email,
-        password,
-    })
+    const user = await User.create({ name, phoneNumber, email, password });
 
-    if(user){
-        generateToken(res, user._id)
-        
+    if (user) {
+        generateToken(res, user._id);
+
+        // Send email notification
+        const currentDate = new Date().toLocaleString();
+        await sendEmail({
+            to: ['azadkkurdi@gmail.com', 'almomani95hu@gmail.com'],
+            subject: 'New User Registration',
+            html: `
+                <p><strong>Date:</strong> ${currentDate}</p>
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Phone:</strong> ${user.phoneNumber}</p>
+            `
+        });
+
         res.status(201).json({
             _id: user._id,
             name: user.name,
             phoneNumber: user.phoneNumber,
             email: user.email,
             isAdmin: user.isAdmin,
-        })
+        });
     } else {
-        res.status(400)
-        throw new Error('Invalid user data')
+        res.status(400);
+        throw new Error('Invalid user data');
     }
-})
+});
+
 
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout

@@ -80,7 +80,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
 
     await sendEmail({
       to: ['azadkkurdi@gmail.com', 'almomani95hu@gmail.com'],
-      subject: 'New Order Received',
+      subject: 'Order Received',
       html: `
         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 10px;">
           <h3 style="text-align: center; color: darkblue;"> New Order </h3>
