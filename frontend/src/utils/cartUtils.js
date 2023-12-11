@@ -7,8 +7,10 @@ export const updateCart = (state) => {
      state.itemsPrice = addDecimals( state.cartItems.reduce((acc, item)=> acc + item.price * item.qty, 0))
      // Calculate shipping price (if order is over AED 300 then free, else AED 30 shipping)
      state.shippingPrice = addDecimals(state.itemsPrice > 800 ? 0 : 30)
-     // Calculate tax price (VAT is 5% for UAE)
-     state.taxPrice = addDecimals(Number((0.05 * state.itemsPrice).toFixed(2)))
+    //  // Calculate tax price (VAT is 5% for UAE)
+    //  state.taxPrice = addDecimals(Number((0.05 * state.itemsPrice).toFixed(2)))
+     // Calculate tax price as ZERO
+     state.taxPrice = 0
      // Calculate total price
      state.totalPrice = (
          Number(state.itemsPrice) +

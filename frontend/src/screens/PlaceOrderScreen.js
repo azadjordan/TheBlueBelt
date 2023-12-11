@@ -30,7 +30,7 @@ const PlaceOrderScreen = () => {
 
   // Calculate discounted price
   const discountedItemsPrice = Number(cart.itemsPrice) - (Number(cart.itemsPrice) * (Number(discount)));
-  const taxAfterDiscount = (discountedItemsPrice * 0.05).toFixed(2)
+  const taxAfterDiscount = cart.taxPrice === 0 ? 0 : (discountedItemsPrice * 0.05).toFixed(2)
   const totalAfterDiscount = (Number(taxAfterDiscount) + Number(cart.shippingPrice) + Number(discountedItemsPrice)).toFixed(2)
 
 
@@ -167,14 +167,14 @@ const PlaceOrderScreen = () => {
                 </Row>
               </ListGroup.Item>
 
-              <ListGroup.Item>
+              {/* <ListGroup.Item>
                 <Row>
                   <Col>VAT:</Col>
                   <Col>
                     AED {taxAfterDiscount || cart.taxPrice}
                   </Col>
                 </Row>
-              </ListGroup.Item>
+              </ListGroup.Item> */}
 
               <ListGroup.Item>
                 <Row>
