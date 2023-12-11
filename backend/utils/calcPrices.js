@@ -10,8 +10,10 @@ export function calcPrices(orderItems, discountPercentage) {
   const itemsPrice = itemsPriceBeforeDiscount - (itemsPriceBeforeDiscount * discountPercentage)
   // Calculate the shipping price
   const shippingPrice = addDecimals(itemsPrice > 800 ? 0 : 30);
-  // Calculate the tax price
-  const taxPrice = addDecimals(Number((0.05 * itemsPrice).toFixed(2)));
+  // // Calculate the tax price
+  // const taxPrice = addDecimals(Number((0.05 * itemsPrice).toFixed(2)));
+  // Calculate the tax price as ZERO (TEMPRARILY INSHALLAH)
+  const taxPrice = 0
   // Calculate the total price
   const totalPrice = (
     Number(itemsPrice) +
