@@ -111,7 +111,7 @@ const HomeScreen = () => {
             variant={getButtonVariant(keyword)}
             disabled={isButtonDisabled(keyword)}
             onClick={() => specialSearch(keyword)}
-            className="px-3 mx-1 my-1 shadowButton"
+            className="px-3 mx-1 my-1 home-screen-filter-buttons"
           >
             {text}
           </Button>

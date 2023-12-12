@@ -26,7 +26,7 @@ main {
   margin: auto;
 }
 
-.rating span {
+/* .rating span {
   margin: 0.1rem;
 }
 
@@ -38,13 +38,13 @@ main {
   font-size: 0.8rem;
   font-weight: 600;
   padding-left: 0.5rem;
-}
+} */
 
 .product-title {
-  height: 2.5em; /* Set a fixed height */
-  overflow: hidden; /* Hide overflow content */
-  text-overflow: ellipsis; /* Add ellipsis for long text */
-  white-space: nowrap; /* Prevent wrapping */
+  height: 2.5em;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
 }
 
 table td,
@@ -52,7 +52,7 @@ table th {
   text-align: center;
 }
 
-.review {
+/* .review {
   margin-top: 30px;
 }
 
@@ -65,7 +65,7 @@ table th {
 
 .review button {
   margin-top: 10px;
-}
+} */
 
 .logo-image {
   width: 40px;
@@ -201,6 +201,10 @@ padding-top: 5px;
 padding-bottom: 20px;
 }
 
+.product-details-section .list-group-item {
+  background-color: #f8f8f8;
+}
+
 .add-to-cart-section {
   width: 100%;
 }
@@ -217,4 +221,14 @@ padding-bottom: 20px;
 
 .card-body-home-screen{
   padding: 5px 10px;
+}
+
+.price-stock-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* This ensures vertical centering, if needed */
+}
+
+.home-screen-filter-buttons {
+  border: 1px rgb(204, 222, 228) solid;
 }

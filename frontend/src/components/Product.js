@@ -18,15 +18,11 @@ const Product = ({ product }) => {
         <Card.Text className="mb-0"><strong>{product.dimensions}</strong></Card.Text>
 
         {/* Conditionally render the stock status with color coding */}
-        <Card.Text className="pb-0 mb-0" style={product.countInStock === 0 ? { color: 'red' } : { color: 'green' }}>
-        <Row>
-          <Col xs={7}>
+        <Card.Text className="pb-0 mb-0 price-stock-container" style={product.countInStock === 0 ? { color: 'red' } : { color: 'green' }}>
+
           <span className="product-price-tag"> AED {product.price} </span>
-          </Col>
-          <Col>
           <span className="in-stock-tag">{product.countInStock === 0 ? "Out of Stock" : "In Stock"}</span> 
-          </Col>
-        </Row>
+
         </Card.Text>
       </Card.Body>
     </Card>
