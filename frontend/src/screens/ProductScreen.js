@@ -28,7 +28,7 @@ const ProductScreen = () => {
 
   // Fetching from the Redux state
   const productsData = useSelector((state) => state.products);
-  const { product, productStatus, error,   } = productsData;
+  const { product, productStatus, error, } = productsData;
 
   // const { userInfo  } = useSelector((state) => state.auth)
 
@@ -46,7 +46,7 @@ const ProductScreen = () => {
   return (
     <>
       <Link className="btn btn-light my-3" to="/">Go Back</Link>
-  
+
       {productStatus === 'loading' ? (<Loader />) :
         productStatus === 'failed' ? (
           <Message variant='danger'>
@@ -55,30 +55,32 @@ const ProductScreen = () => {
         ) : productStatus === 'succeeded' && (
           <>
             <Meta title={product.name} />
-  
+
             <Row>
-              <Col xs={12} md={6}>
+              <Col s={12} md={6}>
+                <div><h2 className='py-2 product-name'> {product.name} </h2></div>
                 {/* Main Image and Thumbnails */}
                 <div className="product-image-container">
                   <Image className="d-block zoom-effect" src={product.images[activeImage]} alt={product.name} fluid />
                 </div>
-                <Row className="mt-3">
+                <Row className="mt-1 thumbnails-row">
                   {product.images.map((imgUrl, index) => (
-                    <Col xs={4} md={3} key={index}>
+                    <Col xs={2} md={2} key={index} className="thumbnail-col">
                       <Image
                         src={imgUrl}
                         alt={`Thumbnail ${index}`}
                         onClick={() => handleThumbnailClick(index)}
-                        className={index === activeImage ? 'active-thumbnail' : ''}
+                        className={`thumbnail-image ${index === activeImage ? 'active-thumbnail' : ''}`}
                         fluid
                         thumbnail
                       />
                     </Col>
                   ))}
                 </Row>
-  
+
+
                 {/* Add to Cart Section */}
-                <Card className="mt-3">
+                <Card className="mt-1 mb-4 add-to-cart-section">
                   <ListGroup variant="flush">
                     <ListGroup.Item>
                       <Row>
@@ -92,12 +94,13 @@ const ProductScreen = () => {
                       <Row>
                         <Col>Product Status:</Col>
                         <Col>
-                          <strong>
+                          <strong className={product.countInStock > 0 ? "in-stock" : "out-of-stock"}>
                             {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
                           </strong>
                         </Col>
                       </Row>
                     </ListGroup.Item>
+
                     {product.countInStock > 0 && (
                       <ListGroup.Item>
                         <Row>
@@ -119,7 +122,7 @@ const ProductScreen = () => {
                     )}
                     <ListGroup.Item>
                       <Button
-                        className="btn-block"
+                        className="btn-block "
                         type="button"
                         disabled={product.countInStock === 0}
                         onClick={addToCartHandler}
@@ -130,12 +133,12 @@ const ProductScreen = () => {
                   </ListGroup>
                 </Card>
               </Col>
-  
-              <Col xs={12} md={6}>
+
+              <Col s={12} md={5}>
                 {/* Product Details */}
-                <ListGroup variant="flush">
+                <ListGroup className='mt-1 product-details-section' variant="flush">
                   <ListGroup.Item>
-                    <h2>{product.name}</h2>
+                    <h4>Product Description</h4>
                   </ListGroup.Item>
                   <ListGroup.Item> Size: <strong>{product.dimensions}</strong> </ListGroup.Item>
                   <ListGroup.Item>Price: AED {product.price}</ListGroup.Item>
