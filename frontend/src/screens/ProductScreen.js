@@ -57,7 +57,7 @@ const ProductScreen = () => {
             <Meta title={product.name} />
   
             <Row>
-              <Col md={6}>
+              <Col xs={12} md={6}>
                 {/* Main Image and Thumbnails */}
                 <div className="product-image-container">
                   <Image className="d-block zoom-effect" src={product.images[activeImage]} alt={product.name} fluid />
@@ -131,7 +131,7 @@ const ProductScreen = () => {
                 </Card>
               </Col>
   
-              <Col md={6}>
+              <Col xs={12} md={6}>
                 {/* Product Details */}
                 <ListGroup variant="flush">
                   <ListGroup.Item>
