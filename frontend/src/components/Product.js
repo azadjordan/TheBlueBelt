@@ -1,14 +1,14 @@
-import { Card} from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const Product = ({ product }) => {
   return (
-    <Card className="my-3 rounded home-product-card">
+    <Card className="my-2 rounded home-product-card">
       <Link to={`/product/${product._id}`}>
         <Card.Img src={product.images[0]} variant="top" className="card-img-top" />
       </Link>
 
-      <Card.Body>
+      <Card.Body className="card-body-home-screen">
         <Link to={`/product/${product._id}`} className="text-decoration-none">
           <Card.Text className="text-truncate" style={{ fontSize: '1.2rem' }}>
             {product.name}
@@ -19,12 +19,14 @@ const Product = ({ product }) => {
 
         {/* Conditionally render the stock status with color coding */}
         <Card.Text className="pb-0 mb-0" style={product.countInStock === 0 ? { color: 'red' } : { color: 'green' }}>
-<strong>          {product.countInStock === 0 ? "Out of Stock" : "In Stock"}
-</strong>
-        </Card.Text>
-
-        <Card.Text className="pt-0 mt-0" as="h5" style={{ color: 'grey' }}>
-          AED {product.price}
+        <Row>
+          <Col xs={7}>
+          <span className="product-price-tag"> AED {product.price} </span>
+          </Col>
+          <Col>
+          <span className="in-stock-tag">{product.countInStock === 0 ? "Out of Stock" : "In Stock"}</span> 
+          </Col>
+        </Row>
         </Card.Text>
       </Card.Body>
     </Card>

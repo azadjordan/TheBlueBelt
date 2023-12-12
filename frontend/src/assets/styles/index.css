@@ -205,3 +205,16 @@ padding-bottom: 20px;
   width: 100%;
 }
 
+.product-price-tag {
+  color: rgb(100, 95, 95);
+  font-size: larger;
+  font-weight: 500;
+}
+
+.in-stock-tag {
+  font-weight: bold;
+}
+
+.card-body-home-screen{
+  padding: 5px 10px;
+}
