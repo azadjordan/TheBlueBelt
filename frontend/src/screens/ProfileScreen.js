@@ -106,7 +106,7 @@ useEffect(() => {
           </Form.Group>
 
           <Form.Group controlId="password" className="my-2">
-            <Form.Label>Password</Form.Label>
+            <Form.Label>New Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Enter password"
@@ -116,7 +116,7 @@ useEffect(() => {
           </Form.Group>
 
           <Form.Group controlId="confirmPassword" className="my-2">
-            <Form.Label>Confirm Password</Form.Label>
+            <Form.Label>Confirm New Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Confirm password"
