@@ -1,42 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteImage, fetchImages } from '../slices/imageSlice';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../assets/styles/Gallery.css'; // Make sure to include the CSS file for styling
+import { FaTrash } from "react-icons/fa";
+import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { toast } from 'react-toastify';
+import '../assets/styles/Gallery.css';
+
 
 const ImageDisplay = () => {
-    const [images, setImages] = useState([]);
+    const dispatch = useDispatch();
+    const [deletingImageId, setDeletingImageId] = useState(null); // New state for tracking deletion
+
+    // Deconstructing the required states from the Redux store
+    const { images, fetchImagesStatus, error } = useSelector(state => state.images);
 
     useEffect(() => {
-      const fetchImages = async () => {
-        try {
-          const response = await axios.get('/api/images');
-          setImages(response.data);
-        } catch (error) {
-          console.error('Error fetching images:', error);
-        }
-      };
-  
-      fetchImages();
-    }, []);
-  
+        dispatch(fetchImages());
+    }, [dispatch]);
+
+    const handleDeleteImage = (id) => {
+        setDeletingImageId(id); // Set the ID of the image being deleted
+        dispatch(deleteImage(id))
+            .then(() => {
+                toast.success('Image deleted successfully');
+                setDeletingImageId(null); // Reset the state after deletion
+            })
+            .catch((err) => {
+                toast.error('Error deleting image');
+                console.error('Error deleting image:', err);
+                setDeletingImageId(null); // Reset the state in case of error
+            });
+    };
+
+    // Handling loading and error states
+    if (fetchImagesStatus === 'loading') return <Loader />;
+    if (error) return <Message variant='danger'>{error}</Message>;
+
     return (
         <Container>
-          <Row>
-            {images.map((image, index) => (
-              <Col md={2} key={index} className="mb-3">
-                <div className="image-card">
-                  <div className="image-card-inner">
-                    <div className="image-card-front">
-                      <img src={image.imageUrl} alt={`Tags: ${image.tags.join(', ')}`} className="img-fluid" />
-                    </div>
-                    <div className="image-card-back">
-                      <p>{image.tags.join(', ')}</p>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-            ))}
-          </Row>
+            <Row className='mb-5'>
+                {images.map((image, index) => (
+                    <Col xs={4} sm={4} md={3} lg={2} key={index} className="mb-3">
+                        <div className="image-card">
+                            <div className="image-card-inner">
+                                {deletingImageId === image._id ? (
+                                    <Loader /> // Show loader if this image is being deleted
+                                ) : (
+                                    <>
+                                        <div className="image-card-front">
+                                            <img src={image.imageUrl} alt={`Tags: ${image.tags.join(', ')}`} className="img-fluid" />
+                                        </div>
+                                        <div className="image-card-back">
+                                            <p>{image.tags.join(', ')}</p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                            {deletingImageId !== image._id && ( // Hide the delete button if the image is being deleted
+                                <button
+                                    className="delete-icon"
+                                    onClick={() => handleDeleteImage(image._id)}
+                                    style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                                    <FaTrash />
+                                </button>
+                            )}
+                        </div>
+                    </Col>
+                ))}
+
+            </Row>
         </Container>
     );
 };

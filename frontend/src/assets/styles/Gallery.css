@@ -1,5 +1,9 @@
+
+
 .image-card {
     perspective: 1000px;
+    position: relative;
+
   }
   
   .image-card-inner {
@@ -23,9 +27,15 @@
   }
   
   .image-card-front {
-    /* Set the background color to white */
     background-color: white;
     color: black;
+  }
+  
+  .image-card-front img {
+    height: 100%;
+    object-fit: cover;
+    border: 1px solid lightgray; /* Light border */
+    border-radius: 10px; /* Rounded corners */
   }
   
   .image-card-back {
@@ -35,10 +45,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px; /* Match front side's border-radius */
   }
   
   .img-fluid {
-    height: 100%;
-    object-fit: cover;
+    width: 100%; /* Ensure the image takes the full width of its container */
+  }
+
+  .image-preview {
+    position: relative;
+    display: inline-block;
   }
   
+  .image-preview img {
+    max-width: 80px; /* Adjust as needed */
+    height: auto;
+  }
+  
+  .image-preview button {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  
+  .image-card:hover .delete-icon {
+    visibility: visible;
+}
+
+.delete-icon {
+    visibility: hidden;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* Add more styling as needed */
+}

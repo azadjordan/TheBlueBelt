@@ -1,12 +1,13 @@
 import React from 'react'
-//import ImageUpload from '../../components/ImageUpload'
 import ImageDisplay from '../../components/ImageDisplay'
+import ImageUpload from '../../components/ImageUpload'
 
 
 const GalleryScreen = () => {
   return (
     <>
-    <h2 className='p-5'>Gallery</h2>
+    <h1 className='px-4 py-5'>Gallery</h1>
+    <ImageUpload/>
     <div className='py-4'></div>
 
       <ImageDisplay/>

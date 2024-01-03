@@ -10,8 +10,6 @@ import FormContainer from '../../components/FormContainer'
 import { deleteProductImages } from '../../slices/productsSlice.js';
 
 
-
-
 const ProductEditScreen = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
