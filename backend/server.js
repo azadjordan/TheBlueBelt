@@ -7,7 +7,7 @@ import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import couponRoutes from './routes/couponRoutes.js';
-
+import imageRoutes from './routes/imageRoutes.js'
 
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import cookieParser from "cookie-parser";
@@ -36,6 +36,7 @@ app.use("/api/products", productRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/orders", orderRoutes)
 app.use('/api/coupons', couponRoutes);
+app.use('/api/images', imageRoutes);
 
 const __dirname = path.resolve()
 // app.use('/uploads', express.static(path. join(__dirname, '/uploads')))

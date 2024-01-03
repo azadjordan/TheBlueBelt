@@ -1,0 +1,44 @@
+.image-card {
+    perspective: 1000px;
+  }
+  
+  .image-card-inner {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Adjust as needed */
+    text-align: center;
+    transition: transform 0.4s;
+    transform-style: preserve-3d;
+  }
+  
+  .image-card:hover .image-card-inner {
+    transform: rotateY(180deg);
+  }
+  
+  .image-card-front, .image-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+  
+  .image-card-front {
+    /* Set the background color to white */
+    background-color: white;
+    color: black;
+  }
+  
+  .image-card-back {
+    background-color: white;
+    color: black;
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .img-fluid {
+    height: 100%;
+    object-fit: cover;
+  }
+  
