@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteImage, fetchImages } from '../slices/imageSlice';
+import { deleteImage, fetchImages } from '../../slices/imageSlice';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FaTrash } from "react-icons/fa";
-import Message from "../components/Message";
-import Loader from "../components/Loader";
+import Message from "../../components/Message";
+import Loader from "../../components/Loader";
 import { toast } from 'react-toastify';
-import '../assets/styles/Gallery.css';
+import '../../assets/styles/Gallery.css';
 
 
 const ImageDisplay = () => {
@@ -41,7 +41,7 @@ const ImageDisplay = () => {
     return (
         <Container>
             <Row className='mb-5'>
-                {images.map((image, index) => (
+                {images?.map((image, index) => (
                     <Col xs={4} sm={4} md={3} lg={2} key={index} className="mb-3">
                         <div className="image-card">
                             <div className="image-card-inner">

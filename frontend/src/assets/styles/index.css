@@ -232,3 +232,44 @@ padding-bottom: 20px;
 .home-screen-filter-buttons {
   border: 1px rgb(204, 222, 228) solid;
 }
+
+
+
+.images-gallery {
+  max-height: 214px; /* Set a maximum height for the gallery */
+  overflow-y: auto; /* Enables vertical scrolling */
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+.image-thumbnail {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.image-thumbnail img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.image-thumbnail.selected {
+  border-color: #007bff;
+}
+
+.image-thumbnail.selected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 123, 255, 0.5);
+  z-index: 1;
+}
+

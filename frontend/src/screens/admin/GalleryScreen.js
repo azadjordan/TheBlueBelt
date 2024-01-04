@@ -1,6 +1,6 @@
 import React from 'react'
-import ImageDisplay from '../../components/ImageDisplay'
-import ImageUpload from '../../components/ImageUpload'
+import ImageDisplay from '../../components/GalleryScreen/ImageDisplay'
+import ImageUpload from '../../components/GalleryScreen/ImageUpload'
 
 
 const GalleryScreen = () => {

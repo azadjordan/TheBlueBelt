@@ -24,14 +24,20 @@ export const uploadImage = asyncHandler(async (req, res) => {
     res.status(201).json(savedImages);
 });
 
-
-// @desc    Get all images
+// @desc    Get all images sorted by most recent first
 // @route   GET /api/images
 // @access  Public or Private/Admin
 export const getImages = asyncHandler(async (req, res) => {
-    const images = await Image.find({}); // Fetch all images from the database
-    res.json(images); // Send the array of images back to the client
+    const images = await Image.find({}).sort({ createdAt: -1 }); // Sort by createdAt in descending order
+    const count = images.length;
+
+    res.json({
+        count,
+        images
+    });
 });
+
+
 
 // @desc    Get an image by ID
 // @route   GET /api/images/:id

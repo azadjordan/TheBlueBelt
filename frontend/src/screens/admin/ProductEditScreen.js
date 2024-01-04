@@ -8,7 +8,8 @@ import { fetchProduct, updateProduct } from '../../slices/productsSlice.js'
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from '../../components/FormContainer'
 import { deleteProductImages } from '../../slices/productsSlice.js';
-
+import { clearSelectedImages, fetchImages } from '../../slices/imageSlice.js'
+import { selectImage, deselectImage } from '../../slices/imageSlice.js';
 
 const ProductEditScreen = () => {
     const dispatch = useDispatch()
@@ -17,11 +18,20 @@ const ProductEditScreen = () => {
     const { id: productId } = useParams()
     const { product, productStatus, updatedProductStatus, error, updateError } = useSelector((state) => state.products)
     const { deleteImagesStatus, deleteImagesError } = useSelector((state) => state.products);
+    const { urls, selectedImages } = useSelector(state => state.images);
 
+    console.log(selectedImages);
 
     useEffect(() => {
+        // Fetch product and images on mount
         dispatch(fetchProduct(productId));
-    }, [dispatch, productId])
+        dispatch(fetchImages());
+
+        // Clear selected images on unmount
+        return () => {
+            dispatch(clearSelectedImages()); // Action to clear selected images
+        };
+    }, [dispatch, productId]);
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState(0);
@@ -67,6 +77,10 @@ const ProductEditScreen = () => {
 
         uploadingImages.forEach(image => {
             formData.append('images', image.file, image.file.name); // Specify the filename too.
+        });
+
+        selectedImages.forEach(imageUrl => {
+            formData.append('selectedImages', imageUrl);
         });
 
 
@@ -127,6 +141,14 @@ const ProductEditScreen = () => {
         }
     };
 
+    const handleImageClick = (imageUrl) => {
+        if (selectedImages.includes(imageUrl)) {
+            dispatch(deselectImage(imageUrl));
+        } else {
+            dispatch(selectImage(imageUrl));
+        }
+    };
+
 
     return (
         <>
@@ -158,8 +180,30 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
+                        <Form.Group controlId='imageSelection' className='my-2'>
+                            <Form.Label>Image Selection</Form.Label>
+                            <div className="images-gallery">
+                                <Row className="g-0"> {/* Updated here */}
+                                    {urls.map((imageUrl, index) => (
+                                        <Col xs={3} sm={3} md={3} lg={3} key={index} className="p-0"> {/* Updated here */}
+                                            <div
+                                                className={`image-thumbnail ${selectedImages.includes(imageUrl) ? 'selected' : ''}`}
+                                                onClick={() => handleImageClick(imageUrl)}
+                                            >
+                                                <img src={imageUrl} alt={`Thumbnail ${index + 1}`} className="m-0" /> {/* Updated here */}
+                                            </div>
+                                        </Col>
+                                    ))}
+                                </Row>
+                            </div>
+                        </Form.Group>
+
+
+
+
+
                         <Form.Group controlId='images' className='my-2'>
-                            <Form.Label>Images</Form.Label>
+                            <Form.Label>Images Upload</Form.Label>
                             <Form.Control
                                 type='file'
                                 multiple

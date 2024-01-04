@@ -1,22 +1,43 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Row, Col, Button, Form } from 'react-bootstrap';
-import { toast } from 'react-toastify'
-
+import Message from "../Message";
+import { toast } from 'react-toastify';
+import { uploadImages } from '../../slices/imageSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ImageUpload = () => {
     const [images, setImages] = useState([]);
     const [tags, setTags] = useState('');
 
+    const dispatch = useDispatch();
+    const { uploadImagesStatus, error } = useSelector(state => state.images);
 
     const handleImageChange = (e) => {
-        // Create an array of image objects
-        const selectedImages = Array.from(e.target.files).map(file => ({
-            id: Date.now() + Math.random(),
-            file: file
-        }));
-        setImages([...images, ...selectedImages]);
+        const files = Array.from(e.target.files);
+        let newImages = [];
+        let isAllFilesImages = true;
+        const acceptedMimetypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+        // Checking if all files are images
+        files.forEach(file => {
+            if (!acceptedMimetypes.includes(file.type)) {
+                isAllFilesImages = false;
+            } else {
+                newImages.push({
+                    id: Date.now() + Math.random(),
+                    file: file
+                });
+            }
+        });
+
+        if (isAllFilesImages) {
+            setImages(prevState => [...prevState, ...newImages]);
+        } else {
+            e.target.value = '';  // Clear the file input if any of the files are not accepted images.
+            toast.error('Only images allowed.');
+        }
     };
+
 
     const handleTagsChange = (e) => {
         setTags(e.target.value);
@@ -24,38 +45,31 @@ const ImageUpload = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        // Check if there are no images selected
+
         if (images.length === 0) {
             toast.error('Please select images to upload');
-            return; // Prevent further execution of the function
+            return;
         }
-    
+
         const formData = new FormData();
         images.forEach(image => {
             formData.append('images', image.file);
         });
         formData.append('tags', tags);
-    
-        try {
-            const response = await axios.post('/api/images', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+
+        dispatch(uploadImages({ formData }))
+            .then(() => {
+                toast.success('Uploaded To Cloud');
+                setImages([]); // Clear the local state
+            })
+            .catch((error) => {
+                console.error('Error uploading images:', error);
+                toast.error('Error uploading images');
             });
-            console.log(response.data);
-            toast.success('Uploaded To Cloud');
-    
-            // Clear the images state and reset the file input
-            setImages([]);
-            e.target.fileUpload.value = ''; // Reset the file input by targeting its controlId
-        } catch (error) {
-            console.error('Error uploading images:', error);
-            toast.error('Error uploading images');
-        }
     };
-    
-    
+
+
+
 
     const removeImageHandler = (id) => {
         setImages(images.filter(image => image.id !== id));
@@ -91,7 +105,7 @@ const ImageUpload = () => {
             </Row>
 
             <Row className='p-3'>
-                {images.map((imageObj, index) => (
+                {images?.map((imageObj, index) => (
                     <Col xs={2} sm={2} md={2} lg={1} key={imageObj.id} className="mb-2">
                         <div className="image-preview">
                             <img src={URL.createObjectURL(imageObj.file)} alt="Upload Preview" className="img-fluid" />
@@ -101,7 +115,13 @@ const ImageUpload = () => {
                 ))}
             </Row>
 
-            <Button type="submit" variant="primary" >Upload To Cloud</Button>
+            {error && <Message variant='danger'>{error}</Message>}
+            {uploadImagesStatus === 'loading' ? (
+                <h6 style={{ color: 'orange' }}>Uploading...</h6>
+            ) : (
+                <Button type="submit" variant="primary" disabled={images.length === 0}>Upload To Cloud</Button>
+            )}
+
         </Form>
     );
 };
