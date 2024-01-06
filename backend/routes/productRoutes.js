@@ -6,10 +6,9 @@ import {
   updateProduct,
   deleteProduct,
   getTopProducts,
-  deleteProductImages
+  removeProductImages
 } from "../controllers/productController.js";
 import { protect, admin } from '../middleware/authMiddleware.js'
-import upload from '../config/s3.js'
 import checkObjectId from "../middleware/checkObjectId.js";
 
 const router = express.Router();
@@ -18,11 +17,9 @@ router.route("/").get(getProducts).post(protect, admin, createProduct);
 router.get('/top', getTopProducts);
 router.route("/:id")
   .get(checkObjectId, getProductById)
-  .put(protect, admin, checkObjectId, upload.array('images'), updateProduct)
+  .put(protect, admin, checkObjectId, updateProduct)
   .delete(protect, admin, checkObjectId, deleteProduct);
 
-router.delete('/:id/images', protect, admin, checkObjectId, deleteProductImages);
-
-
+router.put('/:id/images', protect, admin, checkObjectId, removeProductImages);
 
 export default router;

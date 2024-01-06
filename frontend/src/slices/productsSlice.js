@@ -39,8 +39,6 @@ export const deleteProduct = createAsyncThunk(
   }
 )
 
-
-
 // Async thunk action to fetch top rated products
 export const fetchTopRatedProducts = createAsyncThunk(
   'products/fetchTopRatedProducts',
@@ -50,26 +48,6 @@ export const fetchTopRatedProducts = createAsyncThunk(
   }
 );
 
-// Async thunk action to update a product
-export const updateProduct = createAsyncThunk(
-  'products/updateProduct',
-  async ({ productId, updatedFields }, { rejectWithValue }) => {
-    try {
-      const { data } = await axios.put(
-        `${PRODUCTS_URL}/${productId}`,
-        updatedFields,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        }
-      );
-      return { updatedFields: data };
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-)
 
 // Async thunk action to fetch individual product
 export const fetchProduct = createAsyncThunk(
@@ -85,18 +63,28 @@ export const fetchProduct = createAsyncThunk(
   }
 );
 
-// Add an asynchronous thunk for deleting product images.
-export const deleteProductImages = createAsyncThunk(
-  'products/deleteProductImagesStatus',
+// Async thunk action to update a product
+export const updateProduct = createAsyncThunk(
+  'products/updateProduct',
+  async ({ id, updatedProduct }, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.put(`${PRODUCTS_URL}/${id}`, updatedProduct);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+// Async thunk action to remove images from a product
+export const removeProductImages = createAsyncThunk(
+  'products/removeProductImages',
   async (productId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${PRODUCTS_URL}/${productId}/images`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
+      const response = await axios.put(`${PRODUCTS_URL}/${productId}/images`);
+      return response.data; // Assuming the backend returns some data on success
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -110,21 +98,19 @@ const initialState = {
     pages: null,
   },
   product: null,
-  updatedProduct: null,
   productsStatus: 'idle', // for all products
   productStatus: 'idle', // for individual product
+  removeImagesStatus: 'idle',
   createdProductStatus: 'idle',
-  updatedProductStatus: 'idle',
   deletedProductStatus: 'idle',
   error: null,
-  updateError: null,
   reviewError: null,
-  createdReviewStatus: 'idle',
   topRatedProducts: [],
   topRatedProductsStatus: 'idle',
   topRatedError: null,
-  deleteImagesStatus: 'idle',
-  deleteImagesError: null,
+  updatedProductStatus: 'idle',
+  updateError: null,
+  removeImagesError: null,
 };
 
 // Slice
@@ -170,22 +156,6 @@ const productsSlice = createSlice({
         state.createdProductStatus = 'failed';
         state.error = action.error.message;
       })
-      // Update Product
-      .addCase(updateProduct.pending, (state) => {
-        state.updatedProductStatus = 'loading';
-      })
-      .addCase(updateProduct.fulfilled, (state, action) => {
-        state.updatedProductStatus = 'succeeded';
-        const index = state.data.products.findIndex(product => product._id === action.payload.updatedFields._id);
-        if (index !== -1) {
-          state.data.products[index] = action.payload.updatedFields;
-        }
-      })
-
-      .addCase(updateProduct.rejected, (state, action) => {
-        state.updatedProductStatus = 'failed';
-        state.updateError = action.error.message;
-      })
       // Delete Product
       .addCase(deleteProduct.pending, (state) => {
         state.deletedProductStatus = 'loading';
@@ -210,25 +180,39 @@ const productsSlice = createSlice({
         state.topRatedProductsStatus = 'failed';
         state.topRatedError = action.error.message;
       })
-      // Delete Images
-      .addCase(deleteProductImages.pending, (state) => {
-        state.deleteImagesStatus = 'loading';
+      .addCase(updateProduct.pending, (state) => {
+        state.updatedProductStatus = 'loading';
       })
-      .addCase(deleteProductImages.fulfilled, (state, action) => {
-        state.deleteImagesStatus = 'succeeded';
-        if (state.product) {
-          state.product.images = [];
-      }
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.updatedProductStatus = 'succeeded';
+        const index = state.data.products.findIndex(p => p._id === action.payload._id);
+        if (index !== -1) {
+          state.data.products[index] = action.payload;
+        }
       })
-      .addCase(deleteProductImages.rejected, (state, action) => {
-        state.deleteImagesStatus = 'failed';
-        state.deleteImagesError = action.error.message;
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.updatedProductStatus = 'failed';
+        state.updateError = action.error.message;
+      })
+      .addCase(removeProductImages.pending, (state) => {
+        // Handle loading state if needed
+        state.removeImagesStatus = 'loading'
+        state.removeImagesError = null
+      })
+      .addCase(removeProductImages.fulfilled, (state, action) => {
+        // Assuming the payload contains the updated product data without images
+        state.removeImagesStatus = 'succeeded'
+        state.product.images = []
+        state.removeImagesError = null
+      })
+      .addCase(removeProductImages.rejected, (state, action) => {
+        // Handle error
+        state.removeImagesError = action.error.message;
       });
+      
   },
 });
 
-// Export actions if needed
-// export const {} = productsSlice.actions;
 
 // Export reducer
 export default productsSlice.reducer;

@@ -9,6 +9,7 @@ style={{
 width: '100px',
 height: '100px',
 margin: 'auto',
+padding: '10px',
 display: 'block',
 }}
 ></Spinner>

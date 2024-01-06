@@ -5,10 +5,12 @@ const imagesSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  name: {
+    type: String,
+    required: false // Not required because it's auto-generated
+  },
   tags: [{
     type: String
-    // Tags can be used to label and categorize images for easier searching.
-    // For example: ['ribbon', 'blue', '1-inch', '100-yd']
   }],
 }, {
   timestamps: true

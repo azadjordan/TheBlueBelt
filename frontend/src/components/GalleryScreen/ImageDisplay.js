@@ -41,38 +41,40 @@ const ImageDisplay = () => {
     return (
         <Container>
             <Row className='mb-5'>
-                {images?.map((image, index) => (
-                    <Col xs={4} sm={4} md={3} lg={2} key={index} className="mb-3">
-                        <div className="image-card">
-                            <div className="image-card-inner">
-                                {deletingImageId === image._id ? (
-                                    <Loader /> // Show loader if this image is being deleted
-                                ) : (
-                                    <>
-                                        <div className="image-card-front">
-                                            <img src={image.imageUrl} alt={`Tags: ${image.tags.join(', ')}`} className="img-fluid" />
-                                        </div>
-                                        <div className="image-card-back">
-                                            <p>{image.tags.join(', ')}</p>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                            {deletingImageId !== image._id && ( // Hide the delete button if the image is being deleted
-                                <button
-                                    className="delete-icon"
-                                    onClick={() => handleDeleteImage(image._id)}
-                                    style={{ position: 'absolute', top: '10px', right: '10px' }}>
-                                    <FaTrash />
-                                </button>
-                            )}
+            {images?.map((image, index) => (
+    <Col xs={4} sm={4} md={3} lg={2} key={index} className="mb-3">
+        <div className="image-card">
+            <div className="image-card-inner">
+                {deletingImageId === image._id ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <div className="image-card-front">
+                            <img src={image.imageUrl} alt={`Tags: ${image.tags.join(', ')}`} className="img-fluid" />
                         </div>
-                    </Col>
-                ))}
+                        <div className="image-card-back">
+                            <h5>{image.name}</h5> {/* Image name at the top */}
+                            <p>{image.tags.join(', ')}</p> {/* Tags below the name */}
+                        </div>
+                    </>
+                )}
+            </div>
+            {deletingImageId !== image._id && (
+                <button
+                    className="delete-icon"
+                    onClick={() => handleDeleteImage(image._id)}
+                    style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                    <FaTrash />
+                </button>
+            )}
+        </div>
+    </Col>
+))}
 
             </Row>
         </Container>
     );
+    
 };
 
 export default ImageDisplay;

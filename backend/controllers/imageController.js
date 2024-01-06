@@ -14,15 +14,24 @@ export const uploadImage = asyncHandler(async (req, res) => {
     // Extract tags from req.body and ensure it's always an array
     const tags = Array.isArray(req.body.tags) ? req.body.tags : req.body.tags ? [req.body.tags] : [];
 
-    const uploadedImages = req.files.map(file => ({
-        imageUrl: file.location, // 'location' should contain the URL of the uploaded image
-        tags: tags // Add tags to each image
-    }));
+    const uploadedImages = req.files.map(file => {
+        // Extract the name from the file URL
+        const urlParts = file.location.split('/');
+        const fileName = urlParts[urlParts.length - 1];
+        const name = fileName.split('-').pop().split('.')[0];
+
+        return {
+            imageUrl: file.location, // 'location' should contain the URL of the uploaded image
+            name: name, // Assign the extracted name
+            tags: tags // Add tags to each image
+        };
+    });
 
     const savedImages = await Image.insertMany(uploadedImages);
 
     res.status(201).json(savedImages);
 });
+
 
 // @desc    Get all images sorted by most recent first
 // @route   GET /api/images

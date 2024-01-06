@@ -4,10 +4,9 @@ import { Form, Button, Row, Col } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
-import { fetchProduct, updateProduct } from '../../slices/productsSlice.js'
+import { fetchProduct, removeProductImages, updateProduct } from '../../slices/productsSlice.js'
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from '../../components/FormContainer'
-import { deleteProductImages } from '../../slices/productsSlice.js';
 import { clearSelectedImages, fetchImages } from '../../slices/imageSlice.js'
 import { selectImage, deselectImage } from '../../slices/imageSlice.js';
 
@@ -16,8 +15,7 @@ const ProductEditScreen = () => {
     const navigate = useNavigate()
 
     const { id: productId } = useParams()
-    const { product, productStatus, updatedProductStatus, error, updateError } = useSelector((state) => state.products)
-    const { deleteImagesStatus, deleteImagesError } = useSelector((state) => state.products);
+    const { product, productStatus, updatedProductStatus, error, updateError, removeImagesStatus, removeImagesError } = useSelector((state) => state.products)
     const { urls, selectedImages } = useSelector(state => state.images);
 
     console.log(selectedImages);
@@ -42,10 +40,6 @@ const ProductEditScreen = () => {
     const [manuCost, setManuCost] = useState(0);
     const [dimensions, setDimensions] = useState('');
     const [source, setSource] = useState('');
-    const [uploadingImages, setUploadingImages] = useState([]);
-
-
-
 
     useEffect(() => {
         if (product) {
@@ -64,88 +58,48 @@ const ProductEditScreen = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('price', price);
-        formData.append('brand', brand);
-        formData.append('category', category);
-        formData.append('countInStock', countInStock);
-        formData.append('description', description);
-        formData.append('manuCost', manuCost);
-        formData.append('dimensions', dimensions);
-        formData.append('source', source);
+        const updatedProduct = {
+            name,
+            price,
+            brand,
+            category,
+            countInStock,
+            description,
+            manuCost,
+            dimensions,
+            source,
+            images: selectedImages // Assuming this is how you handle image selection
+        };
 
-        uploadingImages.forEach(image => {
-            formData.append('images', image.file, image.file.name); // Specify the filename too.
-        });
-
-        selectedImages.forEach(imageUrl => {
-            formData.append('selectedImages', imageUrl);
-        });
-
-
-        try {
-            // Dispatch the updateProduct action with formData
-            await dispatch(updateProduct({ productId: productId, updatedFields: formData })).unwrap()
-            toast.success('Product updated');
-            navigate('/admin/productlist');
-        } catch (err) {
-            toast.error(err?.message || err);
-        }
+        // Dispatch the update product action
+        dispatch(updateProduct({ id: productId, updatedProduct }))
+            .unwrap()
+            .then(() => {
+                toast.success('Product updated successfully');
+                navigate('/admin/productlist');
+            })
+            .catch(error => {
+                toast.error(error.message || 'Error updating product');
+            });
     };
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        let newImages = [];
-        let isAllFilesImages = true;
-        const acceptedMimetypes = ['image/jpeg', 'image/png', 'image/webp'];
-
-        // Checking if all files are images
-        files.forEach(file => {
-            if (!acceptedMimetypes.includes(file.type)) {
-                isAllFilesImages = false;
-            } else {
-                newImages.push({
-                    id: Date.now() + Math.random(),
-                    file: file
-                });
-            }
-        });
-
-        if (isAllFilesImages) {
-            setUploadingImages(prevState => [...prevState, ...newImages]);
-        } else {
-            e.target.value = '';  // Clear the file input if any of the files are not accepted images.
-            toast.error('Only JPEG, PNG, and WEBP images are allowed.');
-        }
-    };
-
-
-
-    const removeImageHandler = (id) => {
-        setUploadingImages(prevImages => prevImages.filter(img => img.id !== id));
-    };
-
-    const deleteImagesHandler = async () => {
-        // Display a confirmation message to the user
-        const confirmDelete = window.confirm('Are you sure you want to delete all the images of this product from the database?');
-
-        // If the user confirms the deletion, proceed
-        if (confirmDelete) {
-            try {
-                await dispatch(deleteProductImages(productId)).unwrap();
-                toast.success('Images deleted successfully');
-            } catch (err) {
-                toast.error(err?.message || err);
-            }
-        }
-    };
 
     const handleImageClick = (imageUrl) => {
         if (selectedImages.includes(imageUrl)) {
             dispatch(deselectImage(imageUrl));
         } else {
             dispatch(selectImage(imageUrl));
+        }
+    };
+
+    const handleRemoveImages = async () => {
+        if (window.confirm('Are you sure?')) {
+            try {
+                await dispatch(removeProductImages(productId)).unwrap();
+                toast.success('Images removed successfully');
+            } catch (err) {
+                toast.error(err.message || 'An error occurred');
+            }
         }
     };
 
@@ -170,18 +124,8 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId='price' className='my-2'>
-                            <Form.Label>Price</Form.Label>
-                            <Form.Control
-                                type='number'
-                                placeholder='Enter price'
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                            ></Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='imageSelection' className='my-2'>
-                            <Form.Label>Image Selection</Form.Label>
+                        <Form.Group controlId='imageSelection' className='my-5'>
+                            <Form.Label> <strong>Select/Add Images To Product</strong> </Form.Label>
                             <div className="images-gallery">
                                 <Row className="g-0"> {/* Updated here */}
                                     {urls.map((imageUrl, index) => (
@@ -198,42 +142,50 @@ const ProductEditScreen = () => {
                             </div>
                         </Form.Group>
 
-
-
-
-
-                        <Form.Group controlId='images' className='my-2'>
-                            <Form.Label>Images Upload</Form.Label>
-                            <Form.Control
-                                type='file'
-                                multiple
-                                onChange={handleImageChange}
-                            ></Form.Control>
-                            <div className="images-container">
-                                <Row>
-                                    {product?.images?.map((image, index) => (
-                                        <Col md={3} key={index} className="mb-2">
-                                            <div className="image-wrapper">
-                                                <img src={image} alt="Product" width="100%" className="m-2" />
-                                                {/* Add a remove button if you want to enable removal of previously saved images */}
-                                            </div>
-                                        </Col>
-                                    ))}
-                                    {uploadingImages.map((imageObj, index) => (
-                                        <Col md={3} key={imageObj.id} className="mb-2">
-                                            <div className="image-wrapper">
-                                                <img src={URL.createObjectURL(imageObj.file)} alt="New Upload" width="100%" className="m-2" />
-                                                <button onClick={() => removeImageHandler(imageObj.id)}>Remove</button>
-                                            </div>
-                                        </Col>
-                                    ))}
+                        <Form.Group controlId='currentImages' className='my-5'>
+                            <Form.Label> <strong>Remove Images From Product</strong> </Form.Label>
+                            <div className="images-gallery">
+                                <Row className="g-0">
+                                    {product?.images && product.images.length > 0 ? (
+                                        product.images.map((imageUrl, index) => (
+                                            <Col xs={3} sm={3} md={3} lg={3} key={index} className="p-0">
+                                                <div className="image-thumbnail">
+                                                    <img src={imageUrl} alt={`Thumbnail ${index + 1}`} className="m-0" />
+                                                </div>
+                                            </Col>
+                                        ))
+                                    ) : (
+                                        <p className='text-muted'>This product has no images to be removed.</p>
+                                    )}
                                 </Row>
                             </div>
-                            {deleteImagesError && <Message variant='danger'>{deleteImagesError}</Message>}
-                            {deleteImagesStatus === 'loading' && <Loader />}
-                            <Button variant='danger' className='my-2' onClick={deleteImagesHandler}>
-                                Delete Images
-                            </Button>
+                            {removeImagesError && <Message variant='danger'>{error.data.message || error}</Message>}
+                            {removeImagesStatus === 'loading' ? (
+                                <div className="mt-2 w-100 d-flex justify-content-center">
+                                    <h4 className='text-danger'>Removing...</h4>
+                                </div>
+                            ) : (
+                                <Button
+                                    className='w-100 mt-3'
+                                    variant='danger'
+                                    onClick={handleRemoveImages}
+                                    disabled={!product?.images || product.images.length === 0}
+                                >
+                                    Remove All Images
+                                </Button>
+                            )}
+                        </Form.Group>
+
+
+
+                        <Form.Group controlId='price' className='my-2'>
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control
+                                type='number'
+                                placeholder='Enter price'
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                            ></Form.Control>
                         </Form.Group>
 
                         <Form.Group controlId='brand' className='my-2'>
@@ -309,8 +261,8 @@ const ProductEditScreen = () => {
                         {updateError && <Message variant='danger'> {updateError} </Message>}
                         {updatedProductStatus === 'loading' && <Loader />}
 
-                        <Button type='submit' variant='primary' className='my-2'>
-                            Update
+                        <Button type='submit' variant='primary' className='w-100 my-2'>
+                            Update Product
                         </Button>
 
                     </Form>
