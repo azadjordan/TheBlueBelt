@@ -32,7 +32,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     manuCost,
     dimensions,
     source,
-    images // Assuming you want to update images as well
+    images // New images from the client
   } = req.body;
 
   const product = await Product.findById(req.params.id);
@@ -47,7 +47,11 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.manuCost = manuCost || product.manuCost;
     product.dimensions = dimensions || product.dimensions;
     product.source = source || product.source;
-    product.images = images || product.images;
+
+    // Append new images to the existing ones
+    if (images && images.length) {
+      product.images = [...product.images, ...images];
+    }
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -58,6 +62,7 @@ const updateProduct = asyncHandler(async (req, res) => {
 });
 
 
+
 // @desc    Delete a product and its images from S3
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
@@ -66,11 +71,6 @@ const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-      for (const imageUrl of product.images) {
-          const rawKey = imageUrl.split('.com/')[1];
-          const Key = decodeURIComponent(rawKey); // Decode the extracted key
-          if (Key) await deleteImage(Key);
-      }
 
       await Product.deleteOne({ _id: req.params.id });
       res.status(200).json({ message: 'Product deleted successfully' });
@@ -107,7 +107,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   Get /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 50;
+  const pageSize = 30;
   const page = Number(req.query.pageNumber) || 1;
 
   let keywordQuery = {};
