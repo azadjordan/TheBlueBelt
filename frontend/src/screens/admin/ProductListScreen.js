@@ -52,16 +52,16 @@ const ProductListScreen = () => {
 
     return (
         <>
-            <Row className="align-items-center py-3">
-                <h1>Products</h1>
+            <Row className="align-items-center">
+                <h1 className="pt-4" >Products List</h1>
 
-                <Col>
+                {/* <Col>
                     <Row>
                         <Col className="py-2">
                             <h3 className="py-1">Total Products: {data?.products?.length}</h3>
                         </Col>
                     </Row>
-                </Col>
+                </Col> */}
                 <Col className="text-end">
                     <Button className="btn-sm m-3" onClick={createProductHandler}>
                         <FaEdit /> Create Product
@@ -69,57 +69,64 @@ const ProductListScreen = () => {
                 </Col>
             </Row>
 
+            {data && data.pages > 1 && (
+                <Paginate pages={data.pages} page={data.page} isAdmin={true} />
+            )}
+
             {productsStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>{error?.data?.message || error?.message || error}</Message> : (
                 <>
 
 
 
                     <Table striped hover bordered responsive className='table-sm py-3'>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>NAME</th>
-            <th>PRICE</th>
-            <th>SOURCE</th>
-            <th>IMAGE</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        {productsStatus === 'succeeded' && data?.products.map((product) => (
-            <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>AED {product.price}</td>
-                <td>
-                    {product.source || '-'}
-                </td>
-                <td>
-                    {product.images && product.images.length > 0 ? (
-                        <img src={product.images[0]} alt={product.name} style={{ width: '50px', height: '50px' }} /> // Image displayed here
-                    ) : (
-                        'No Image' // Display this text if there are no images
-                    )}
-                </td>
-                <td>
-                    <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
-                        <FaEdit />
-                    </Button>
-                    <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
-                        <FaTrash />
-                    </Button>
-                </td>
-            </tr>
-        ))}
-    </tbody>
-</Table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAME</th>
+                                <th>PRICE</th>
+                                <th>SOURCE</th>
+                                <th>IMAGE</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {productsStatus === 'succeeded' && data?.products.map((product) => (
+                                <tr key={product._id}>
+                                    <td>{product._id}</td>
+                                    <td>{product.name}</td>
+                                    <td>AED {product.price}</td>
+                                    <td>
+                                        {product.source || '-'}
+                                    </td>
+                                    <td>
+                                        {product.images && product.images.length > 0 ? (
+                                            <img src={product.images[0]} alt={product.name} style={{ width: '50px', height: '50px' }} /> // Image displayed here
+                                        ) : (
+                                            'No Image' // Display this text if there are no images
+                                        )}
+                                    </td>
+                                    <td>
+                                        <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
+                                            <FaEdit />
+                                        </Button>
+                                        <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(product._id)}>
+                                            <FaTrash />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
 
 
 
                 </>
             )}
-            <Paginate pages={data.pages} page={data.page} isAdmin={true} />
 
+
+            {data && data.pages > 1 && (
+                <Paginate pages={data.pages} page={data.page} isAdmin={true} />
+            )}
         </>
     )
 }

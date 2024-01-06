@@ -5,14 +5,14 @@ import Product from '../components/Product.js';
 import { fetchProducts } from '../slices/productsSlice.js';
 import Loader from '../components/Loader.js';
 import Message from '../components/Message.js';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import Paginate from '../components/Paginate.js';
 import ProductCarousel from '../components/ProductCarousel.js';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const { pageNumber, keyword } = useParams();
-
   const [activeFilters, setActiveFilters] = useState(new Set());
 
 
@@ -48,6 +48,8 @@ const HomeScreen = () => {
       }
       return newFilters;
     });
+    navigate('/?page=1'); 
+
   };
 
     // Function to determine if a button should be disabled
@@ -104,7 +106,7 @@ const HomeScreen = () => {
 
       <h1>Latest Ribbons</h1>
       {/* Special search buttons */}
-      <div className="my-3">
+      <div className="my-4">
         {buttonsData.map(({ text, keyword }) => (
           <Button
             key={keyword}
@@ -119,10 +121,13 @@ const HomeScreen = () => {
 
         
       </div>
+
+      <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
+
       {productsStatus === 'loading' && <Loader />}
       {productsStatus === 'succeeded' && (
         <>
-          <Row style={{ marginBottom: '20px' }}>
+          <Row>
             {data.products.map((product) => (
               <Col key={product._id} xl={2} lg={3} md={4} sm={6} xs={6}  >
                 <Product product={product} />

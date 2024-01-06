@@ -113,8 +113,8 @@ const ProductEditScreen = () => {
                 <h1>Edit Product</h1>
                 {productStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>
                     {error.data.message || error}</Message> : (
-                    <Form onSubmit={submitHandler}>
-                        <Form.Group controlId='name' className='my-2'>
+                    <Form onSubmit={submitHandler} className='mb-4'>
+                        <Form.Group controlId='name' className='my-4'>
                             <Form.Label>Name</Form.Label>
                             <Form.Control
                                 type='text'
@@ -124,25 +124,30 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId='imageSelection' className='my-5'>
+                        <Form.Group controlId='imageSelection' className='my-4'>
                             <Form.Label> <strong>Select/Add Images To Product</strong> </Form.Label>
                             <div className="images-gallery">
-                                <Row className="g-0"> {/* Updated here */}
-                                    {urls.map((imageUrl, index) => (
-                                        <Col xs={3} sm={3} md={3} lg={3} key={index} className="p-0"> {/* Updated here */}
-                                            <div
-                                                className={`image-thumbnail ${selectedImages.includes(imageUrl) ? 'selected' : ''}`}
-                                                onClick={() => handleImageClick(imageUrl)}
-                                            >
-                                                <img src={imageUrl} alt={`Thumbnail ${index + 1}`} className="m-0" /> {/* Updated here */}
-                                            </div>
-                                        </Col>
-                                    ))}
-                                </Row>
+                                {urls.length > 0 ? (
+                                    <Row className="g-0"> {/* Render images if they exist */}
+                                        {urls.map((imageUrl, index) => (
+                                            <Col xs={3} sm={3} md={3} lg={3} key={index} className="p-0">
+                                                <div
+                                                    className={`image-thumbnail ${selectedImages.includes(imageUrl) ? 'selected' : ''}`}
+                                                    onClick={() => handleImageClick(imageUrl)}
+                                                >
+                                                    <img src={imageUrl} alt={`Thumbnail ${index + 1}`} className="m-0" />
+                                                </div>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                ) : (
+                                    <p className='text-muted'>No images available</p>
+                                )}
                             </div>
                         </Form.Group>
 
-                        <Form.Group controlId='currentImages' className='my-5'>
+
+                        <Form.Group controlId='currentImages' className='my-4'>
                             <Form.Label> <strong>Remove Images From Product</strong> </Form.Label>
                             <div className="images-gallery">
                                 <Row className="g-0">
