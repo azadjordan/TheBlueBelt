@@ -137,6 +137,9 @@ const HomeScreen = () => {
           <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
         </>
       )}
+      {productsStatus === 'succeeded' && data.products.length === 0 && (
+        <Message variant='secondary'>No Results? We might have more in stock! Please contact customer service for assistance and the latest inventory updates.</Message>
+      )}
       {productsStatus === 'failed' &&
         <Message variant='danger'>{error?.data?.message || error.error || error}</Message>
       }
