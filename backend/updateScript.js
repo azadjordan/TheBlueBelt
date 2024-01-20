@@ -51,4 +51,4 @@ const updateProductDetails = async () => {
     }
 };
 
-//updateProductDetails();
+updateProductDetails();
