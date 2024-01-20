@@ -80,7 +80,7 @@ table th {
 /* HomeScreen cards */
 .home-product-card .card-img-top {
   width: 100%;
-  height: 600px;
+  height: 500px;
   object-fit: cover;
 }
 
