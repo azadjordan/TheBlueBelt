@@ -107,7 +107,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   Get /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 30;
+  const pageSize = 50;
   const page = Number(req.query.pageNumber) || 1;
 
   let keywordQuery = {};

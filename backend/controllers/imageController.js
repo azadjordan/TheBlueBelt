@@ -32,7 +32,6 @@ export const uploadImage = asyncHandler(async (req, res) => {
     res.status(201).json(savedImages);
 });
 
-
 // @desc    Get all images sorted by most recent first
 // @route   GET /api/images
 // @access  Public or Private/Admin
@@ -46,7 +45,25 @@ export const getImages = asyncHandler(async (req, res) => {
     });
 });
 
+// @desc    Get all image URLs sorted by most recent first
+// @route   GET /api/images/urls
+// @access  Public or Private/Admin
+export const getImageUrls = asyncHandler(async (req, res) => {
+    const images = await Image.find({}).sort({ createdAt: -1 }); // Sort by createdAt in descending order
+    const imageUrls = images.map(image => image.imageUrl); // Extract image URLs
 
+    res.json(imageUrls); // Return only the array of image URLs
+});
+
+// @desc    Get names of all images
+// @route   GET /api/images/names
+// @access  Public or Private/Admin
+export const getImageNames = asyncHandler(async (req, res) => {
+    const images = await Image.find({}); // Get all images
+    const imageNames = images.map(image => image.name); // Extract image names
+
+    res.json(imageNames); // Return an array of image names
+});
 
 // @desc    Get an image by ID
 // @route   GET /api/images/:id

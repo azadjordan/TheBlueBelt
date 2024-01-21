@@ -114,7 +114,7 @@ table th {
   left: 50%; /* Centers horizontally */
   transform: translate(-50%, -50%); /* Shifts the caption */
   background: black;
-  opacity: 0.4;
+  opacity: 0.3;
   text-align: center;
   padding: 10px;
   white-space: nowrap; /* Prevents text from wrapping to a new line */
@@ -132,6 +132,17 @@ table th {
   text-overflow: ellipsis;
 }
 
+.carousel-image {
+  max-height: 400px;
+  min-height: 400px;
+  max-width: 400px;
+  min-width: 400px;
+}
+
+.carousel-item {
+  background-color: #a2a6aa;
+}
+
 /* Media query for smaller screens */
 @media (max-width: 768px) {
   .caption-text {
@@ -142,6 +153,8 @@ table th {
     font-size: 1.6rem;
   }
 }
+
+
 
 .zoom-effect {
   transition: transform 0.5s ease;

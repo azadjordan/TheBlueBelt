@@ -9,22 +9,22 @@ const ProductCarousel = () => {
     const dispatch = useDispatch()
     const { topRatedProducts, topRatedError } = useSelector((state) => state.products);
 
-    const carouselInterval = 2500; 
+    const carouselInterval = 2500;
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(fetchTopRatedProducts())
-    },[dispatch ])
+    }, [dispatch])
 
 
     return topRatedError ? <Message variant='danger'>{topRatedError} </Message> : (
-        <Carousel pause='hover' className="bg-white mb-4 no-transition" >
-        
+        <Carousel pause='hover' className="bg-white mb-4 no-transition " >
+
             {topRatedProducts.map(product => (
-                <Carousel.Item key={product._id} interval={carouselInterval}>
+                <Carousel.Item className="carousel-item" key={product._id} interval={carouselInterval}>
                     <Link to={`/product/${product._id}`}>
-                        <Image style={{ maxHeight: '400px', minHeight: "400px", maxWidth: "400px", minWidth: "400px" }} src={product.images[0]} alt={product.name} fluid />
+                        <Image className="carousel-image" src={product.images[0]} alt={product.name} fluid />
                         <Carousel.Caption className='carousel-caption'>
-                        <div className="caption-text">{product.name}</div>
+                            <div className="caption-text">{product.name}</div>
                         </Carousel.Caption>
                     </Link>
                 </Carousel.Item>
