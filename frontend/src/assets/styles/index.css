@@ -135,14 +135,15 @@ table th {
 }
 
 .carousel-image {
-min-height: 400px;
-max-height: 400px;
+/* min-height: 400px; */
+/* max-height: 400px; */
 min-width: 150px;
-max-width: 150px;
+max-width: 290px;
+padding-left: 150px;
 }
 
-.carousel-item {
-  /* background-color: #a2a6aa; */
+.carousel-item{
+max-height: 400px;
 }
 
 /* Media query for smaller screens */
