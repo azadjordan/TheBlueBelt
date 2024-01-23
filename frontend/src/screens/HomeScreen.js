@@ -98,6 +98,7 @@ const HomeScreen = () => {
 
   return (
     <>
+
       {!keyword ? <ProductCarousel /> : (
         <Link to='/' className='btn btn-light mb-4'>
           Go Back
@@ -122,9 +123,11 @@ const HomeScreen = () => {
         
       </div>
 
+
       <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
 
       {productsStatus === 'loading' && <Loader />}
+      <div className='home-screen-container'>
       {productsStatus === 'succeeded' && (
         <>
           <Row>
@@ -134,9 +137,12 @@ const HomeScreen = () => {
               </Col>
             ))}
           </Row>
-          <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
+
         </>
       )}
+      </div>
+      <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
+
       {productsStatus === 'succeeded' && data.products.length === 0 && (
         <Message variant='secondary'>No Results? We might have more in stock! Please contact customer service for assistance and the latest inventory updates.</Message>
       )}

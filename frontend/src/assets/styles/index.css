@@ -2,6 +2,8 @@ body,
 html {
   height: 100%; /* Ensure full viewport height */
   margin: 0; /* Reset margin */
+  background-color: rgb(248, 247, 242);
+
 }
 
 #root {
@@ -17,7 +19,7 @@ html {
 footer {
   /* padding: 20px; */
   color: #212529;
-  background-color: rgb(236, 244, 255);
+  background-color: rgb(213, 229, 252);
 }
 
 main {
@@ -45,6 +47,12 @@ main {
   overflow: hidden; 
   text-overflow: ellipsis; 
   white-space: nowrap; 
+}
+
+.home-screen-container {
+  background-color: rgb(238, 247, 250);
+  padding: 0 10px;
+  border-radius: 10px;
 }
 
 table td,
@@ -86,12 +94,18 @@ table th {
   margin: auto;
 }
 
+.home-product-card {
+  background-color: rgb(244, 249, 250);
+
+}
+
 /* Main Image for ProductScreen */
 .product-image-container {
   width: 100%;
   height: 300px; /* Adjust this to the height you prefer */
   overflow: hidden;
   position: relative;
+  
 }
 .product-image-container img {
   width: 100%;
@@ -101,6 +115,7 @@ table th {
   border: 1px solid lightgrey;
   border-radius: 10px;
   padding: 1%;
+  
 }
 
 .carousel-caption {
