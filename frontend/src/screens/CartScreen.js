@@ -37,7 +37,7 @@ const CartScreen = () => {
     < >
       <h1 className="my-4">Shopping Cart</h1>
       <Row className='mt-5'>
-        <Col xs={12}  md={8} style={{paddingBottom: '30px'}}>
+        <Col xs={12} md={8} style={{ paddingBottom: '30px' }}>
           {cartItems?.length === 0 ? (
             <Message>
               Your cart is empty <Link to="/">Go Back</Link>
@@ -48,7 +48,9 @@ const CartScreen = () => {
                 <ListGroup.Item key={item._id}>
                   <Row>
                     <Col xs={3}>
-                      <Image src={item.images[0]} alt={item.name} fluid rounded />
+                      <div className="cart-image-container">
+                        <Image src={item.images[0]} alt={item.name} fluid rounded />
+                      </div>
                     </Col>
                     <Col xs={9}>
                       <Row className="d-flex">
@@ -65,7 +67,7 @@ const CartScreen = () => {
                             variant="light"
                             onClick={() => removeFromCartHandler(item._id)}
                           >
-                            <FaTrash/>
+                            <FaTrash />
                           </Button>
                         </Col>
                       </Row>
@@ -102,15 +104,15 @@ const CartScreen = () => {
             </ListGroup>
           )}
         </Col>
-        <Col xs={12}  md={4} >
+        <Col xs={12} md={4} >
           <Card >
             <ListGroup variant="flush">
               <ListGroup.Item>
                 <h5>
-                  Items in cart: <span style={{fontSize: '1.5rem'}}>{cartItems.reduce((acc, item) => acc + item.qty, 0)}{" "}</span>
+                  Items in cart: <span style={{ fontSize: '1.5rem' }}>{cartItems.reduce((acc, item) => acc + item.qty, 0)}{" "}</span>
                 </h5>
-                </ListGroup.Item>
-                <ListGroup.Item>
+              </ListGroup.Item>
+              <ListGroup.Item>
                 <h5>
                   Total Price: AED{" "}
                   {cartItems

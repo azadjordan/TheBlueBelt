@@ -120,12 +120,15 @@ const PlaceOrderScreen = () => {
                     <ListGroup.Item key={index}>
                       <Row>
                         <Col md={1}>
-                          <Image
+                        <div className="placeorder-image-container">
+                        <Image
                             src={item.images[0]}
                             alt={item.name}
                             fluid
                             rounded
                           />
+                        </div>
+                          
                         </Col>
                         <Col>
                           <Link to={`/product/${item._id}`}>

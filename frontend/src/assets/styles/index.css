@@ -50,7 +50,6 @@ main {
 }
 
 .home-screen-container {
-  background-color: rgb(238, 247, 250);
   padding: 0 10px;
   border-radius: 10px;
 }
@@ -131,7 +130,7 @@ table th {
   left: 50%; /* Centers horizontally */
   transform: translate(-50%, -50%); /* Shifts the caption */
   background: black;
-  opacity: 0.3;
+  opacity: 0.6;
   text-align: center;
   padding: 10px;
   white-space: nowrap; /* Prevents text from wrapping to a new line */
@@ -239,6 +238,15 @@ padding-bottom: 20px;
 .add-to-cart-section {
   width: 100%;
 }
+
+.cart-image-container {
+  max-width: 35px;
+}
+
+.placeorder-image-container{
+  max-width: 20px;
+}
+
 
 .product-price-tag {
   color: rgb(100, 95, 95);
