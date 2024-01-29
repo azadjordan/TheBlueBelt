@@ -312,3 +312,20 @@ padding-bottom: 20px;
   z-index: 1;
 }
 
+/* Products List Screen */
+
+.id-column {
+  max-width: 45px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow:clip;
+}
+
+.name-column {
+  max-width:100px;
+}
+
+.tight-column {
+  white-space: nowrap;
+  min-width: 1%;
+}

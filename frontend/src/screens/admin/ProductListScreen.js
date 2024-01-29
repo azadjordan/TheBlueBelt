@@ -80,32 +80,36 @@ const ProductListScreen = () => {
 
                     <Table striped hover bordered responsive className='table-sm py-3'>
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>NAME</th>
-                                <th>PRICE</th>
-                                <th>SOURCE</th>
-                                <th>IMAGE</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+            <th className="id-column">ID</th>
+            <th className="tight-column">IMAGE</th>
+            <th className="name-column">NAME</th>
+            <th className="tight-column">PRICE</th>
+            <th className="tight-column">SOURCE</th>
+            <th className="tight-column">STOCK</th>
+            <th className="tight-column"></th> {/* If you have action buttons here */}
+        </tr>
                         </thead>
                         <tbody>
                             {productsStatus === 'succeeded' && data?.products.map((product) => (
                                 <tr key={product._id}>
-                                    <td>{product._id}</td>
-                                    <td>{product.name}</td>
-                                    <td>AED {product.price}</td>
-                                    <td>
-                                        {product.source || '-'}
-                                    </td>
-                                    <td>
+                                    <td className="id-column">{product._id}</td>
+                                    <td className="tight-column">
                                         {product.images && product.images.length > 0 ? (
                                             <img src={product.images[0]} alt={product.name} style={{ width: '50px', height: '50px' }} /> // Image displayed here
                                         ) : (
                                             'No Image' // Display this text if there are no images
                                         )}
                                     </td>
-                                    <td>
+                                    <td className="name-column">{product.name}</td>
+                                    <td className="tight-column">AED {product.price}</td>
+                                    <td className="tight-column">
+                                        {product.source || '-'}
+                                    </td>
+                                    
+                                    <td className="tight-column">{product.countInStock}</td> {/* Add this line to display the stock count */}
+
+                                    <td className="tight-column">
                                         <Button as={Link} to={`/admin/product/${product._id}/edit`} variant="light" className="btn-sm mx-2">
                                             <FaEdit />
                                         </Button>
