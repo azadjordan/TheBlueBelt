@@ -61,8 +61,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 // @desc    Delete a product and its images from S3
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
@@ -135,25 +133,15 @@ const getProductsByStock = asyncHandler(async (req, res) => {
   const pageSize = 50;
   const page = Number(req.query.pageNumber) || 1;
 
-  let keywordQuery = {};
-  if (req.query.keyword) {
-    const keywords = req.query.keyword.split(',').map(keyword => {
-      return { name: { $regex: keyword, $options: 'i' } };
-    });
-    keywordQuery = { $and: keywords };
-  }
-
   // Sort by 'countInStock' in ascending order
-  const count = await Product.countDocuments({ ...keywordQuery });
-  const products = await Product.find({ ...keywordQuery })
+  const count = await Product.countDocuments({});
+  const products = await Product.find({})
     .sort({ countInStock: 1 }) // Sorting by countInStock
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  res.json({ products, page, pages: Math.ceil(count / pageSize), count });
 });
-
-
 
 
 // @desc    Fetch a product

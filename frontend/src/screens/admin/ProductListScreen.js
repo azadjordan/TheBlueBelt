@@ -55,6 +55,7 @@ const ProductListScreen = () => {
         <>
             <Row className="align-items-center">
                 <h1 className="pt-4" >Products List</h1>
+                <h5> Total Products: {data?.count}</h5>
 
                 {/* <Col>
                     <Row>
@@ -64,7 +65,7 @@ const ProductListScreen = () => {
                     </Row>
                 </Col> */}
                 <Col className="text-end">
-                    <Button className="btn-sm m-3" onClick={createProductHandler}>
+                    <Button className="btn-sm mb-3" onClick={createProductHandler}>
                         <FaEdit /> Create Product
                     </Button>
                 </Col>

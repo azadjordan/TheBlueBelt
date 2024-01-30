@@ -91,11 +91,12 @@ export const removeProductImages = createAsyncThunk(
 
 export const fetchLowStockProducts = createAsyncThunk(
   'products/fetchLowStockProducts',
-  async ({ pageNumber = 1, keyword = '' }) => {
-    const { data } = await axios.get(`${PRODUCTS_URL}/lowstock?pageNumber=${pageNumber}&keyword=${keyword}`);
+  async ({ pageNumber = 1 }) => {
+    const { data } = await axios.get(`${PRODUCTS_URL}/lowstock?pageNumber=${pageNumber}`);
     return data;
   }
 );
+
 
 
 // Initial state
