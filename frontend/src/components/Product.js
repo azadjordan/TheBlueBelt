@@ -21,7 +21,7 @@ const Product = ({ product }) => {
         <Card.Text className="pb-0 mb-0 price-stock-container" style={product.countInStock === 0 ? { color: 'red' } : { color: 'green' }}>
 
           <span className="product-price-tag"> AED {product.price} </span>
-          <span className="in-stock-tag">{product.countInStock === 0 ? "Out of Stock" : "In Stock"}</span> 
+          <span className="in-stock-tag">{product.countInStock === 0 ? "No Stock" : "In Stock"}</span> 
 
         </Card.Text>
       </Card.Body>

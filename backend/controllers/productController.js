@@ -128,6 +128,32 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
+// @desc    Fetch all products sorted by stock count (ascending)
+// @route   Get /api/products/lowstock
+// @access  Public
+const getProductsByStock = asyncHandler(async (req, res) => {
+  const pageSize = 50;
+  const page = Number(req.query.pageNumber) || 1;
+
+  let keywordQuery = {};
+  if (req.query.keyword) {
+    const keywords = req.query.keyword.split(',').map(keyword => {
+      return { name: { $regex: keyword, $options: 'i' } };
+    });
+    keywordQuery = { $and: keywords };
+  }
+
+  // Sort by 'countInStock' in ascending order
+  const count = await Product.countDocuments({ ...keywordQuery });
+  const products = await Product.find({ ...keywordQuery })
+    .sort({ countInStock: 1 }) // Sorting by countInStock
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+});
+
+
 
 
 // @desc    Fetch a product
@@ -155,4 +181,4 @@ const getTopProducts = asyncHandler(async (req, res) => {
 
 
 
-export { getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopProducts, removeProductImages }
+export { getProductsByStock ,getProducts, getProductById, createProduct, updateProduct, deleteProduct, getTopProducts, removeProductImages }

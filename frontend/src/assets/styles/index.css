@@ -321,10 +321,6 @@ padding-bottom: 20px;
   text-overflow:clip;
 }
 
-.name-column {
-  max-width:100px;
-}
-
 .tight-column {
   white-space: nowrap;
   min-width: 1%;

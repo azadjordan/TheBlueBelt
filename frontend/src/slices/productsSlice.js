@@ -89,6 +89,14 @@ export const removeProductImages = createAsyncThunk(
   }
 );
 
+export const fetchLowStockProducts = createAsyncThunk(
+  'products/fetchLowStockProducts',
+  async ({ pageNumber = 1, keyword = '' }) => {
+    const { data } = await axios.get(`${PRODUCTS_URL}/lowstock?pageNumber=${pageNumber}&keyword=${keyword}`);
+    return data;
+  }
+);
+
 
 // Initial state
 const initialState = {
@@ -208,7 +216,21 @@ const productsSlice = createSlice({
       .addCase(removeProductImages.rejected, (state, action) => {
         // Handle error
         state.removeImagesError = action.error.message;
-      });
+      })
+       // Handle fetchLowStockProducts action
+       .addCase(fetchLowStockProducts.pending, (state) => {
+        // You can also add a specific status for low stock products if needed
+        state.productsStatus = 'loading';
+      })
+      .addCase(fetchLowStockProducts.fulfilled, (state, action) => {
+        state.productsStatus = 'succeeded';
+        // Assuming the payload structure is similar to fetchProducts
+        state.data = action.payload;
+      })
+      .addCase(fetchLowStockProducts.rejected, (state, action) => {
+        state.productsStatus = 'failed';
+        state.error = action.error.message;
+      })
       
   },
 });

@@ -3,7 +3,7 @@ import { FaEdit, FaTrash } from "react-icons/fa"
 import { useDispatch, useSelector } from "react-redux"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
-import { fetchProducts, createProduct, deleteProduct } from "../../slices/productsSlice"
+import { fetchLowStockProducts, createProduct, deleteProduct } from "../../slices/productsSlice"
 import { useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { toast } from 'react-toastify'
@@ -21,11 +21,12 @@ const ProductListScreen = () => {
 
     useEffect(() => {
         if (pageNumber) {
-            dispatch(fetchProducts({ pageNumber }));
+          dispatch(fetchLowStockProducts({ pageNumber }));
         } else {
-            dispatch(fetchProducts('1'))
+          dispatch(fetchLowStockProducts('1'))
         }
-    }, [dispatch, pageNumber]);
+      }, [dispatch, pageNumber]);
+      
 
     const deleteHandler = async (id) => {
         if (window.confirm('Are you sure?')) {
