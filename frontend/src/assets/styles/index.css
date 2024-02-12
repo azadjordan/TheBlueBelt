@@ -86,15 +86,23 @@ table th {
 
 /* HomeScreen cards */
 .home-product-card .card-img-top {
-  width: 60%;
-  height: 350px;
+  width: 100%;
+  height: 200px;
   object-fit: cover;
+  border-radius: 15px;
   display: block;
   margin: auto;
 }
 
 .home-product-card {
-  background-color: rgb(244, 249, 250);
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  border-end-end-radius: 15px;
+  border-end-start-radius: 15px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 0;
+  margin: 0;
 
 }
 
@@ -113,8 +121,12 @@ table th {
   display: block;
   border: 1px solid lightgrey;
   border-radius: 10px;
-  padding: 1%;
-  
+
+}
+
+.card-col-home{
+  padding: 5px;
+  margin: 0;
 }
 
 .carousel-caption {
@@ -250,12 +262,13 @@ padding-bottom: 20px;
 
 .product-price-tag {
   color: rgb(100, 95, 95);
-  font-size: larger;
+  font-size: smaller;
   font-weight: 500;
 }
 
 .in-stock-tag {
   font-weight: bold;
+  font-size: small;
 }
 
 .card-body-home-screen{

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Product = ({ product }) => {
   return (
-    <Card className="my-2 rounded home-product-card">
+    <Card className="my-2 px-0 mx-0  home-product-card">
       <Link to={`/product/${product._id}`}>
         <Card.Img src={product.images[0]} variant="top" className="card-img-top" />
       </Link>
@@ -22,6 +22,7 @@ const Product = ({ product }) => {
 
           <span className="product-price-tag"> AED {product.price} </span>
           <span className="in-stock-tag">{product.countInStock === 0 ? "No Stock" : "In Stock"}</span> 
+          {/* <h3>{product.countInStock}</h3>  */}
 
         </Card.Text>
       </Card.Body>

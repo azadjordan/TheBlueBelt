@@ -132,7 +132,7 @@ const HomeScreen = () => {
         <>
           <Row>
             {data.products.map((product) => (
-              <Col key={product._id} xxl={2} xl={3} lg={3} md={4} sm={6} xs={6}  >
+              <Col className='card-col-home' key={product._id} xxl={2} xl={2} lg={2} md={3} sm={4} xs={4}  >
                 <Product product={product} />
               </Col>
             ))}
