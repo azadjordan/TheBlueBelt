@@ -24,7 +24,6 @@ footer {
 
 main {
   min-height: 80vh;
-  width: 100%;
   margin: auto;
 }
 
@@ -51,8 +50,13 @@ main {
 
 .home-screen-container {
   width: 100%;
-  padding: 0;
-  border-radius: 10px;
+  margin-right: 2px;
+  padding-right: 10px;
+  padding-left: 0;
+}
+.products-home-col{
+  padding: 0 8px;
+  margin: 0;
 }
 
 table td,
@@ -93,9 +97,23 @@ table th {
   border-radius: 15px;
 }
 
+.nav-tabs .nav-link {
+  color: #363f49; /* Bootstrap primary color */
+  font-weight: light;
+}
+
+.nav-tabs .nav-link.active {
+  color: #292424; /* White text color */
+  font-weight:bold;
+}
+
+.buttons-space {
+  background-color: #f4f8fc;
+}
+
 .home-product-card {
   background-color: rgb(255, 255, 255);
-  width: 100%;
+  width: 110%;
   border-end-end-radius: 15px;
   border-end-start-radius: 15px;
   border-top-left-radius: 15px;
@@ -126,7 +144,7 @@ table th {
 }
 
 .card-col-home{
-  padding: 5px;
+  padding: 0;
   margin: 0;
 }
 
@@ -166,7 +184,8 @@ table th {
 /* max-height: 400px; */
 min-width: 150px;
 max-width: 290px;
-padding-left: 140px;
+padding-left: 100px;
+padding-right: 30px;
 }
 
 .carousel-item{
@@ -263,13 +282,14 @@ padding-bottom: 20px;
 
 .product-price-tag {
   color: rgb(72, 97, 129);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
 }
 
 .in-stock-tag {
   font-weight: bold;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
+  line-height: 1.9;
 }
 
 .product-dimensions-tag{

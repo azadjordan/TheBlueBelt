@@ -87,7 +87,8 @@ const HomeScreen = () => {
         </Link>
       )}
 
-      <h1 className='mt-5 mb-4'>Latest Ribbons</h1>
+<hr/>
+      <h1 className='mt-4 mb-4'>Latest Ribbons</h1>
       <Tabs
         defaultActiveKey="special"
         id="filter-tabs"
@@ -98,29 +99,30 @@ const HomeScreen = () => {
         <Tab eventKey="satin" title="Satin"></Tab>
       </Tabs>
 
-      <div className="my-2">
+      <div className="my-2 buttons-space">
         {['1-inch', '0.5-inch', '100-yd', '35-yd'].map((keyword) => (
           <Button
             key={keyword}
             variant={getButtonVariant(keyword)}
             disabled={isButtonDisabled(keyword)}
             onClick={() => specialSearch(keyword)}
-            className="px-3 mx-1 my-1 home-screen-filter-buttons"
+            className="px-3 mx-1 my-1 mb-5 home-screen-filter-buttons"
           >
             {keyword.replace('-', ' ')}
           </Button>
         ))}
       </div>
 
-      <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
-
       {productsStatus === 'loading' && <Loader />}
       <div className="home-screen-container">
         {productsStatus === 'succeeded' && (
           <>
+          <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
+
             <Row>
+
               {data.products.map((product) => (
-                <Col key={product._id} xxl={2} xl={2} lg={2} md={3} sm={4} xs={4}>
+                <Col className='products-home-col' key={product._id} xxl={2} xl={2} lg={2} md={3} sm={4} xs={4}>
                   <Product product={product} />
                 </Col>
               ))}
@@ -128,10 +130,10 @@ const HomeScreen = () => {
           </>
         )}
       </div>
-      <Paginate pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
+      <Paginate  pages={data.pages} page={data.page} keyword={keyword ? keyword : ''} />
 
       {productsStatus === 'succeeded' && data.products.length === 0 && (
-        <Message variant="secondary">
+        <Message className='mt-0' variant="secondary">
           No Results? We might have more in stock! Please contact customer service for assistance and the latest inventory updates.
         </Message>
       )}
