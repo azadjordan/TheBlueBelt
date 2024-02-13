@@ -99,7 +99,7 @@ const HomeScreen = () => {
         <Tab eventKey="satin" title="Satin"></Tab>
       </Tabs>
 
-      <div className="my-2 buttons-space">
+      <div className="my-2 p-0 buttons-space">
         {['1-inch', '0.5-inch', '100-yd', '35-yd'].map((keyword) => (
           <Button
             key={keyword}
