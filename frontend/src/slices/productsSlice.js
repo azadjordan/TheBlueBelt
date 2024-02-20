@@ -91,11 +91,14 @@ export const removeProductImages = createAsyncThunk(
 
 export const fetchLowStockProducts = createAsyncThunk(
   'products/fetchLowStockProducts',
-  async ({ pageNumber = 1 }) => {
-    const { data } = await axios.get(`${PRODUCTS_URL}/lowstock?pageNumber=${pageNumber}`);
+  async ({ pageNumber = 1, keywords = '' }) => {
+    // Encode the keywords to ensure the URL is correctly formatted, especially if the keywords include spaces or special characters.
+    const encodedKeywords = encodeURIComponent(keywords);
+    const { data } = await axios.get(`${PRODUCTS_URL}/lowstock?pageNumber=${pageNumber}&keywords=${encodedKeywords}`);
     return data;
   }
 );
+
 
 
 

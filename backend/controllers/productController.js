@@ -132,16 +132,30 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductsByStock = asyncHandler(async (req, res) => {
   const pageSize = 50;
   const page = Number(req.query.pageNumber) || 1;
+  const keywords = req.query.keywords;
 
-  // Sort by 'countInStock' in ascending order
-  const count = await Product.countDocuments({});
-  const products = await Product.find({})
-    .sort({ countInStock: 1 }) // Sorting by countInStock
+  let query = {};
+
+  if (keywords) {
+    // Split the keywords string into an array of keywords
+    const keywordsArray = keywords.split(' '); // Assuming space is a delimiter
+    // Use $and to ensure all conditions must be met
+    query.$and = keywordsArray.map(keyword => ({
+      name: { $regex: keyword, $options: 'i' } // Case-insensitive search for each keyword
+    }));
+  }
+
+  const count = await Product.countDocuments(query);
+  const products = await Product.find(query)
+    .sort({ countInStock: 1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
   res.json({ products, page, pages: Math.ceil(count / pageSize), count });
 });
+
+
+
 
 
 // @desc    Fetch a product
