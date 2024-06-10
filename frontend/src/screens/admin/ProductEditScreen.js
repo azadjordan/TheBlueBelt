@@ -114,6 +114,10 @@ const ProductEditScreen = () => {
                 {productStatus === 'loading' ? <Loader /> : error ? <Message variant='danger'>
                     {error.data.message || error}</Message> : (
                     <Form onSubmit={submitHandler} className='mb-4'>
+                        <Button type='submit' variant='primary' className='w-100 my-2'>
+                            Update Product
+                        </Button>
+
                         <Form.Group controlId='name' className='my-4'>
                             <Form.Label>Name</Form.Label>
                             <Form.Control
@@ -121,6 +125,26 @@ const ProductEditScreen = () => {
                                 placeholder='Enter name'
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId='countInStock' className='my-2'>
+                            <Form.Label>Count In Stock</Form.Label>
+                            <Form.Control
+                                type='number'
+                                placeholder='Enter count in stock'
+                                value={countInStock}
+                                onChange={(e) => setCountInStock(e.target.value)}
+                            ></Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId='dimensions' className='my-2'>
+                            <Form.Label>Dimensions</Form.Label>
+                            <Form.Control
+                                type='text'
+                                placeholder='Enter dimensions'
+                                value={dimensions}
+                                onChange={(e) => setDimensions(e.target.value)}
                             ></Form.Control>
                         </Form.Group>
 
@@ -203,15 +227,7 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-                        <Form.Group controlId='countInStock' className='my-2'>
-                            <Form.Label>Count In Stock</Form.Label>
-                            <Form.Control
-                                type='number'
-                                placeholder='Enter count in stock'
-                                value={countInStock}
-                                onChange={(e) => setCountInStock(e.target.value)}
-                            ></Form.Control>
-                        </Form.Group>
+                        
 
                         <Form.Group controlId='category' className='my-2'>
                             <Form.Label>Category</Form.Label>
@@ -230,16 +246,6 @@ const ProductEditScreen = () => {
                                 placeholder='Enter manufacturing cost'
                                 value={manuCost}
                                 onChange={(e) => setManuCost(e.target.value)}
-                            ></Form.Control>
-                        </Form.Group>
-
-                        <Form.Group controlId='dimensions' className='my-2'>
-                            <Form.Label>Dimensions</Form.Label>
-                            <Form.Control
-                                type='text'
-                                placeholder='Enter dimensions'
-                                value={dimensions}
-                                onChange={(e) => setDimensions(e.target.value)}
                             ></Form.Control>
                         </Form.Group>
 
@@ -266,9 +272,6 @@ const ProductEditScreen = () => {
                         {updateError && <Message variant='danger'> {updateError} </Message>}
                         {updatedProductStatus === 'loading' && <Loader />}
 
-                        <Button type='submit' variant='primary' className='w-100 my-2'>
-                            Update Product
-                        </Button>
 
                     </Form>
                 )}

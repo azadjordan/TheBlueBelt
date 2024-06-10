@@ -23,6 +23,7 @@ import ProductEditScreen from "./screens/admin/ProductEditScreen";
 import UserListScreen from "./screens/admin/UserListScreen";
 import UserEditScreen from "./screens/admin/UserEditScreen"
 import GalleryScreen from "./screens/admin/GalleryScreen";
+import HeroSection from "./screens/HeroSection";
 
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/cart" element={<CartScreen />} />
             <Route path="/login" element={<LoginScreen />} />
             <Route path="/register" element={<RegisterScreen />} />
+            <Route path="/hero" element={<HeroSection />} />
 
             {/* Private Routes */}
             <Route path="" element={<PrivateRoute />}>
