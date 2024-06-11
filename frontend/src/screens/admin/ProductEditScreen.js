@@ -55,7 +55,6 @@ const ProductEditScreen = () => {
         }
     }, [product]);
 
-
     const submitHandler = async (e) => {
         e.preventDefault();
         const updatedProduct = {
@@ -83,7 +82,6 @@ const ProductEditScreen = () => {
             });
     };
 
-
     const handleImageClick = (imageUrl) => {
         if (selectedImages.includes(imageUrl)) {
             dispatch(deselectImage(imageUrl));
@@ -102,7 +100,6 @@ const ProductEditScreen = () => {
             }
         }
     };
-
 
     return (
         <>
@@ -140,12 +137,16 @@ const ProductEditScreen = () => {
 
                         <Form.Group controlId='dimensions' className='my-2'>
                             <Form.Label>Dimensions</Form.Label>
-                            <Form.Control
-                                type='text'
-                                placeholder='Enter dimensions'
+                            <Form.Select
                                 value={dimensions}
                                 onChange={(e) => setDimensions(e.target.value)}
-                            ></Form.Control>
+                            >
+                                <option value=''>Select Dimensions</option>
+                                <option value='1-inch 100-yd'>1-inch 100-yd</option>
+                                <option value='0.5-inch 100-yd'>0.5-inch 100-yd</option>
+                                <option value='1-inch 35-yd'>1-inch 35-yd</option>
+                                <option value='0.5-inch 35-yd'>0.5-inch 35-yd</option>
+                            </Form.Select>
                         </Form.Group>
 
                         <Form.Group controlId='imageSelection' className='my-4'>
@@ -169,7 +170,6 @@ const ProductEditScreen = () => {
                                 )}
                             </div>
                         </Form.Group>
-
 
                         <Form.Group controlId='currentImages' className='my-4'>
                             <Form.Label> <strong>Remove Images From Product</strong> </Form.Label>
@@ -205,8 +205,6 @@ const ProductEditScreen = () => {
                             )}
                         </Form.Group>
 
-
-
                         <Form.Group controlId='price' className='my-2'>
                             <Form.Label>Price</Form.Label>
                             <Form.Control
@@ -226,8 +224,6 @@ const ProductEditScreen = () => {
                                 onChange={(e) => setBrand(e.target.value)}
                             ></Form.Control>
                         </Form.Group>
-
-                        
 
                         <Form.Group controlId='category' className='my-2'>
                             <Form.Label>Category</Form.Label>
@@ -259,7 +255,6 @@ const ProductEditScreen = () => {
                             ></Form.Control>
                         </Form.Group>
 
-
                         <Form.Group controlId='description' className='my-2'>
                             <Form.Label>Description</Form.Label>
                             <Form.Control
@@ -271,8 +266,6 @@ const ProductEditScreen = () => {
                         </Form.Group>
                         {updateError && <Message variant='danger'> {updateError} </Message>}
                         {updatedProductStatus === 'loading' && <Loader />}
-
-
                     </Form>
                 )}
             </FormContainer>
