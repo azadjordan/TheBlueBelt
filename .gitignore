@@ -24,3 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 
 the-blue-belt-keypair.pem
+
+# Ignore scripts folder
+/scripts
