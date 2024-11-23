@@ -17,6 +17,9 @@
   },
   "author": "Azad Kurdi",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "bugs": {
     "url": "https://github.com/azadjordan/TheBlueBelt/issues"
   },
