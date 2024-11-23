@@ -78,6 +78,7 @@ const ProductEditScreen = () => {
                 navigate('/admin/productlist');
             })
             .catch(error => {
+                console.log(error);
                 toast.error(error.message || 'Error updating product');
             });
     };

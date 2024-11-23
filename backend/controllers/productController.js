@@ -130,7 +130,7 @@ const getProducts = asyncHandler(async (req, res) => {
 // @route   Get /api/products/lowstock
 // @access  Public
 const getProductsByStock = asyncHandler(async (req, res) => {
-  const pageSize = 50;
+  const pageSize = 400;
   const page = Number(req.query.pageNumber) || 1;
   const keywords = req.query.keywords;
 
